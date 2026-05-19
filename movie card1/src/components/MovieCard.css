@@ -1,0 +1,69 @@
+.card {
+  width: 300px;
+  background: #1f1f1f;
+  color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.poster {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+}
+
+.content {
+  padding: 15px;
+}
+
+.content h2 {
+  color: #ffcc00;
+}
+
+.rating {
+  display: inline-block;
+  background: #ffcc00;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.desc {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #ffcc00;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: orange;
+}
+
+.added {
+  background: #4caf50;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 90%;
+  }
+}
