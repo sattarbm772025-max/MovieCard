@@ -1,86 +1,91 @@
 import { useState } from "react";
 import MovieCard from "./components/MovieCard";
 import SearchBar from "./components/SearchBar";
-import Filter from "./components/Filter";
+import MovieModal from "./components/MovieModal";
 import "./App.css";
 
 function App() {
   const moviesData = [
     {
       id: 1,
-      title: "Vikram",
-      genre: "Action",
-      rating: 8.4,
-      description:
-        "A special agent investigates a drug syndicate and uncovers a hidden criminal empire.",
-      image:
+      Title: "Vikram",
+      Year: "2022",
+      Poster:
         "https://upload.wikimedia.org/wikipedia/en/9/93/Vikram_2022_poster.jpg",
+      Genre: "Action",
+      Plot:
+        "A special agent investigates a drug syndicate and uncovers a hidden criminal empire.",
+      imdbRating: "8.4",
     },
 
     {
       id: 2,
-      title: "Sita Ramam",
-      genre: "Romance",
-      rating: 8.6,
-      description:
-        "An orphan soldier's life changes after receiving a letter from a girl named Sita.",
-      image:
+      Title: "Sita Ramam",
+      Year: "2022",
+      Poster:
         "https://upload.wikimedia.org/wikipedia/en/1/1d/Sita_Ramam.jpg",
+      Genre: "Romance",
+      Plot:
+        "An orphan soldier's life changes after receiving a letter from a girl named Sita.",
+      imdbRating: "8.6",
     },
 
     {
       id: 3,
-      title: "Jailer",
-      genre: "Thriller",
-      rating: 7.5,
-      description:
-        "A retired jailer goes on a mission after his son goes missing.",
-      image:
+      Title: "Jailer",
+      Year: "2023",
+      Poster:
         "https://upload.wikimedia.org/wikipedia/en/c/cb/Jailer_2023_Tamil_film_poster.jpg",
+      Genre: "Thriller",
+      Plot:
+        "A retired jailer goes on a mission after his son goes missing.",
+      imdbRating: "7.5",
     },
   ];
 
   const [search, setSearch] = useState("");
-  const [genre, setGenre] = useState("All");
   const [darkMode, setDarkMode] = useState(true);
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
-  const filteredMovies = moviesData.filter((movie) => {
-    const matchesSearch = movie.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesGenre =
-      genre === "All" || movie.genre === genre;
-
-    return matchesSearch && matchesGenre;
-  });
+  const filteredMovies = moviesData.filter((movie) =>
+    movie.Title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className={darkMode ? "app dark" : "app light"}>
       <div className="top-bar">
-        <h1>🎬 Movie Listing App</h1>
+        <h1>🎬 Movie Explorer</h1>
 
         <button
           className="toggle-btn"
           onClick={() => setDarkMode(!darkMode)}
         >
-          {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
+          {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
         </button>
       </div>
 
       <SearchBar search={search} setSearch={setSearch} />
 
-      <Filter genre={genre} setGenre={setGenre} />
-
       <div className="movie-container">
         {filteredMovies.length > 0 ? (
           filteredMovies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+            <MovieCard
+              key={movie.id}
+              movie={movie}
+              setSelectedMovie={setSelectedMovie}
+            />
           ))
         ) : (
           <h2>No movies found</h2>
         )}
       </div>
+
+      {selectedMovie && (
+        <MovieModal
+          movie={selectedMovie}
+          closeModal={() => setSelectedMovie(null)}
+        />
+      )}
     </div>
   );
 }
