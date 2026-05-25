@@ -1,26 +1,33 @@
 import { useState } from "react";
 import "./MovieCard.css";
 
-function MovieCard({ movie, setSelectedMovie }) {
+function MovieCard({ movie }) {
   const [added, setAdded] = useState(false);
 
   return (
     <div className="card">
-      <img className="poster" src={movie.Poster} alt={movie.Title} />
+      <img
+        className="poster"
+        src={
+          movie.image && movie.image !== "N/A"
+            ? movie.image
+            : "https://via.placeholder.com/300x450"
+        }
+        alt={movie.title}
+      />
 
       <div className="content">
-        <h2>{movie.Title}</h2>
+        <h2>{movie.title}</h2>
 
         <p>
-          <b>Year:</b> {movie.Year}
+          <b>Genre:</b> {movie.genre}
         </p>
 
-        <button
-          className="details-btn"
-          onClick={() => setSelectedMovie(movie)}
-        >
-          View Details
-        </button>
+        <div className="rating">
+          ⭐ {movie.rating}
+        </div>
+
+        <p className="desc">{movie.description}</p>
 
         <button
           className={added ? "btn added" : "btn"}

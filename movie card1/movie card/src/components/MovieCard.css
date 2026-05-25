@@ -27,33 +27,36 @@
   margin-bottom: 10px;
 }
 
-.btn,
-.details-btn {
+.rating {
+  display: inline-block;
+  background: #ffcc00;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.desc {
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 80px;
+}
+
+.btn {
   width: 100%;
   padding: 10px;
   margin-top: 10px;
   border: none;
   border-radius: 6px;
+  background: #ffcc00;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.btn {
-  background: #ffcc00;
-}
-
 .btn:hover {
   background: orange;
-}
-
-.details-btn {
-  background: #2196f3;
-  color: white;
-}
-
-.details-btn:hover {
-  background: #1976d2;
 }
 
 .added {
