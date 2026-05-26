@@ -17,6 +17,8 @@ def get_db():
     finally:
         db.close()
 
+# ADD FAVORITE
+
 @router.post("/favorites")
 def add_favorite(
     favorite: FavoriteCreate,
@@ -30,13 +32,14 @@ def add_favorite(
     if existing:
         raise HTTPException(
             status_code=400,
-            detail="Already added"
+            detail="Movie already added"
         )
 
     new_favorite = Favorite(
         movie_id=favorite.movie_id,
         title=favorite.title,
         poster=favorite.poster,
+        genre=favorite.genre,
         user_id=1
     )
 
@@ -47,6 +50,8 @@ def add_favorite(
         "message": "Favorite added"
     }
 
+# GET FAVORITES
+
 @router.get("/favorites")
 def get_favorites(
     db: Session = Depends(get_db)
@@ -55,6 +60,8 @@ def get_favorites(
     favorites = db.query(Favorite).all()
 
     return favorites
+
+# DELETE FAVORITE
 
 @router.delete("/favorites/{movie_id}")
 def delete_favorite(

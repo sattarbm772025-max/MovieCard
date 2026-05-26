@@ -4,3 +4,4 @@ class FavoriteCreate(BaseModel):
     movie_id: str
     title: str
     poster: str
+    genre: str

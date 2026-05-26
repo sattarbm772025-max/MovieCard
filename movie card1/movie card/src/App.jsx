@@ -6,14 +6,26 @@ import "./App.css";
 
 function App() {
   const [movies, setMovies] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+
   const [search, setSearch] = useState("batman");
+
   const [genre, setGenre] = useState("All");
+
   const [darkMode, setDarkMode] = useState(true);
 
-  // Fetch Movies
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
+
+  // FETCH MOVIES
+
   const fetchMovies = async () => {
     try {
-      // Search movies from backend
+      setLoading(true);
+
+      setError("");
+
       const response = await fetch(
         `http://127.0.0.1:8000/movies/search?title=${search}`
       );
@@ -23,7 +35,6 @@ function App() {
       console.log(data);
 
       if (data.Search) {
-        // Fetch full details for each movie
         const formattedMovies = await Promise.all(
           data.Search.map(async (movie) => {
             const detailsResponse = await fetch(
@@ -34,6 +45,7 @@ function App() {
 
             return {
               id: movie.imdbID,
+
               title: movie.Title,
 
               genre: details.Genre
@@ -56,18 +68,96 @@ function App() {
         setMovies(formattedMovies);
       } else {
         setMovies([]);
+        setError("No movies found");
       }
+    } catch (err) {
+      console.log(err);
+
+      setError("Failed to fetch movies");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // FETCH FAVORITES
+
+  const fetchFavorites = async () => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/favorites"
+      );
+
+      const data = await response.json();
+
+      setFavorites(data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Load default movies
+  // ADD FAVORITE
+
+  const addFavorite = async (movie) => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:8000/favorites",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            movie_id: movie.id,
+            title: movie.title,
+            poster: movie.image,
+            genre: movie.genre,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      alert(data.message);
+
+      fetchFavorites();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // DELETE FAVORITE
+
+  const deleteFavorite = async (movieId) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/favorites/${movieId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const data = await response.json();
+
+      alert(data.message);
+
+      fetchFavorites();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // INITIAL LOAD
+
   useEffect(() => {
     fetchMovies();
+
+    fetchFavorites();
   }, []);
 
-  // Genre Filter
+  // FILTER MOVIES
+
   const filteredMovies = movies.filter((movie) => {
     if (genre === "All") return true;
 
@@ -78,9 +168,10 @@ function App() {
 
   return (
     <div className={darkMode ? "app dark" : "app light"}>
-      {/* Header */}
+      {/* HEADER */}
+
       <div className="top-bar">
-        <h1>🎬 Movie Listing App</h1>
+        <h1>🎬 Movie Recommendation App</h1>
 
         <button
           className="toggle-btn"
@@ -90,7 +181,8 @@ function App() {
         </button>
       </div>
 
-      {/* Search + Filter */}
+      {/* SEARCH + FILTER */}
+
       <div className="controls">
         <SearchBar
           search={search}
@@ -110,18 +202,71 @@ function App() {
         </button>
       </div>
 
-      {/* Movies */}
+      {/* LOADING */}
+
+      {loading && (
+        <h2 className="message">
+          Loading movies...
+        </h2>
+      )}
+
+      {/* ERROR */}
+
+      {error && (
+        <h2 className="message">
+          {error}
+        </h2>
+      )}
+
+      {/* MOVIES */}
+
       <div className="movie-container">
-        {filteredMovies.length > 0 ? (
-          filteredMovies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
+        {filteredMovies.map((movie) => (
+          <div key={movie.id}>
+            <MovieCard movie={movie} />
+
+            <button
+              className="fav-btn"
+              onClick={() => addFavorite(movie)}
+            >
+              ❤️ Add Favorite
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* FAVORITES */}
+
+      <h1 className="fav-title">
+        ⭐ Favorite Movies
+      </h1>
+
+      <div className="movie-container">
+        {favorites.map((movie) => (
+          <div
+            className="favorite-card"
+            key={movie.movie_id}
+          >
+            <img
+              src={movie.poster}
+              alt={movie.title}
+              className="favorite-image"
             />
-          ))
-        ) : (
-          <h2>No movies found</h2>
-        )}
+
+            <h3>{movie.title}</h3>
+
+            <p>{movie.genre}</p>
+
+            <button
+              className="delete-btn"
+              onClick={() =>
+                deleteFavorite(movie.movie_id)
+              }
+            >
+              Remove
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
