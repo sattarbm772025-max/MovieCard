@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111827;
+  color: white;
+  transition: 0.3s;
+}
+
+body.light {
+  background: #f3f4f6;
+  color: black;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

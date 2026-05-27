@@ -6,23 +6,23 @@ from app.database.connection import (
     engine
 )
 
+from app.models.user import User
+from app.models.favorite import Favorite
+
 from app.routes import (
     auth,
     movies,
     favorites
 )
 
-# Create Database Tables
 Base.metadata.create_all(bind=engine)
 
-# FastAPI App
 app = FastAPI(
     title="Movie Recommendation API"
 )
 
-# CORS Configuration
 origins = [
-    "http://localhost:5173",
+    "http://localhost:5173"
 ]
 
 app.add_middleware(
@@ -33,12 +33,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include Routes
 app.include_router(auth.router)
 app.include_router(movies.router)
 app.include_router(favorites.router)
 
-# Home Route
 @app.get("/")
 def home():
 

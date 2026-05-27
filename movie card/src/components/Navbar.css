@@ -1,0 +1,170 @@
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 30px;
+
+  background: linear-gradient(
+    90deg,
+    #020617,
+    #001845
+  );
+
+  color: white;
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  box-sizing: border-box;
+}
+
+/* LOGO */
+
+.logo {
+  font-size: 48px;
+  font-weight: bold;
+  color: white;
+
+  transition: 0.3s ease;
+}
+
+/* NAV LINKS */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ffd60a;
+}
+
+/* BUTTONS */
+
+.logout-btn,
+.theme-btn {
+  border: none;
+
+  background: #ffd60a;
+  color: black;
+
+  padding: 10px 18px;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+  font-size: 16px;
+
+  min-width: 60px;
+
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover,
+.theme-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+
+/* ========================= */
+/* LIGHT MODE */
+/* ========================= */
+
+body.light-mode {
+  background: #f5f5f5 !important;
+  color: black !important;
+}
+
+body.light-mode .navbar {
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+/* LOGO COLOR FIX */
+
+body.light-mode .logo {
+  color: #111;
+}
+
+/* LINK COLOR FIX */
+
+body.light-mode .nav-links a {
+  color: #111;
+}
+
+body.light-mode .nav-links a:hover {
+  color: #ff9800;
+}
+
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media (max-width: 992px) {
+
+  .logo {
+    font-size: 38px;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+  }
+
+  .logout-btn,
+  .theme-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
+@media (max-width: 768px) {
+
+  .navbar {
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 20px;
+  }
+
+  .logo {
+    font-size: 34px;
+    text-align: center;
+  }
+
+  .nav-links {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .nav-links a {
+    font-size: 15px;
+  }
+
+  .logout-btn,
+  .theme-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
