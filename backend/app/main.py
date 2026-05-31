@@ -1,21 +1,27 @@
 from fastapi import FastAPI
 
-from fastapi.middleware.cors import (
-    CORSMiddleware
-)
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.database.connection import (
     Base,
     engine
 )
 
+# Models
+
 from app.models.user import User
 from app.models.favorite import Favorite
+from app.models.review import Review
+from app.models.search_history import SearchHistory
+
+# Routes
 
 from app.routes import (
     auth,
     movies,
-    favorites
+    favorites,
+    reviews,
+    history
 )
 
 Base.metadata.create_all(bind=engine)
@@ -31,15 +37,13 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-
     allow_origins=origins,
-
     allow_credentials=True,
-
     allow_methods=["*"],
-
     allow_headers=["*"],
 )
+
+# Register Routes
 
 app.include_router(auth.router)
 
@@ -47,9 +51,14 @@ app.include_router(movies.router)
 
 app.include_router(favorites.router)
 
+app.include_router(reviews.router)
+
+app.include_router(history.router)
+
+
 @app.get("/")
 def home():
 
     return {
-        "message": "Movie API Running"
+        "message": "Movie Recommendation API Running"
     }
