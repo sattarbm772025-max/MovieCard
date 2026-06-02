@@ -8,21 +8,18 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Favorites from "./pages/Favorites";
 import Watchlist from "./pages/Watchlist";
+import MovieDetails from "./pages/MovieDetails";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import { Toaster } from "react-hot-toast";
 
 function App() {
-
   return (
     <>
-
       <Toaster position="top-right" />
 
       <Routes>
-
-        {/* HOME */}
 
         <Route
           path="/"
@@ -33,21 +30,24 @@ function App() {
           }
         />
 
-        {/* LOGIN */}
+        <Route
+          path="/movie/:id"
+          element={
+            <ProtectedRoute>
+              <MovieDetails />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/login"
           element={<Login />}
         />
 
-        {/* REGISTER */}
-
         <Route
           path="/register"
           element={<Register />}
         />
-
-        {/* FAVORITES */}
 
         <Route
           path="/favorites"
@@ -57,8 +57,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* WATCHLIST */}
 
         <Route
           path="/watchlist"
@@ -70,7 +68,6 @@ function App() {
         />
 
       </Routes>
-
     </>
   );
 }
