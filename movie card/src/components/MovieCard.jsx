@@ -1,11 +1,11 @@
 import "./MovieCard.css";
-
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function MovieCard({ movie }) {
+  const navigate = useNavigate();
 
   const addFavorite = () => {
-
     let favorites =
       JSON.parse(localStorage.getItem("favorites")) || [];
 
@@ -29,7 +29,6 @@ function MovieCard({ movie }) {
   };
 
   const addWatchlist = () => {
-
     let watchlist =
       JSON.parse(localStorage.getItem("watchlist")) || [];
 
@@ -52,50 +51,46 @@ function MovieCard({ movie }) {
     toast.success("Added to Watchlist");
   };
 
+  const goToDetails = () => {
+    navigate(`/movie/${movie.id}`);
+  };
+
   return (
-    <div className="movie-card">
-
-      {/* POSTER */}
-
+    <div
+      className="movie-card"
+      onClick={goToDetails}
+      style={{ cursor: "pointer" }}
+    >
       <img
         src={movie.poster}
         alt={movie.title}
         className="movie-image"
       />
 
-      {/* CONTENT */}
-
       <div className="movie-content">
-
-        {/* TITLE */}
-
         <h2 className="movie-title">
           {movie.title}
         </h2>
-
-        {/* GENRE */}
 
         <p className="movie-genre">
           🎭 {movie.genre}
         </p>
 
-        {/* RATING */}
-
         <div className="movie-rating">
           ⭐ {movie.rating}
         </div>
-
-        {/* STORY */}
 
         <p className="movie-story">
           {movie.story ||
             "No movie description available."}
         </p>
 
-        {/* BUTTONS */}
-
-        <div className="movie-buttons">
-
+        <div
+          className="movie-buttons"
+          onClick={(e) =>
+            e.stopPropagation()
+          }
+        >
           <button
             className="favorite-btn"
             onClick={addFavorite}
@@ -109,9 +104,7 @@ function MovieCard({ movie }) {
           >
             👁 Watchlist
           </button>
-
         </div>
-
       </div>
     </div>
   );
