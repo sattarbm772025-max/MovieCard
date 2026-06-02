@@ -154,3 +154,17 @@ body.light-mode .favorite-card p {
     height: 300px;
   }
 }
+.empty-state {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.empty-state h2 {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  font-size: 20px;
+  color: gray;
+}
