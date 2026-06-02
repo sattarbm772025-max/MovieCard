@@ -27,7 +27,10 @@ function Navbar() {
   const [darkMode, setDarkMode] =
     useState(true);
 
-  // LOAD THEME
+  const favoriteCount =
+    JSON.parse(
+      localStorage.getItem("favorites")
+    )?.length || 0;
 
   useEffect(() => {
 
@@ -44,8 +47,6 @@ function Navbar() {
     }
 
   }, []);
-
-  // TOGGLE THEME
 
   const toggleTheme = () => {
 
@@ -75,8 +76,6 @@ function Navbar() {
     setDarkMode(!darkMode);
   };
 
-  // LOGOUT
-
   const handleLogout = () => {
 
     logout();
@@ -87,13 +86,9 @@ function Navbar() {
   return (
     <nav className="navbar">
 
-      {/* LOGO */}
-
       <div className="logo">
         🎬 Movie App
       </div>
-
-      {/* NAV LINKS */}
 
       <div className="nav-links">
 
@@ -104,7 +99,7 @@ function Navbar() {
         {token && (
           <>
             <Link to="/favorites">
-              Favorites
+              Favorites ({favoriteCount})
             </Link>
 
             <Link to="/watchlist">
@@ -131,8 +126,6 @@ function Navbar() {
             Logout
           </button>
         )}
-
-        {/* THEME BUTTON */}
 
         <button
           className="theme-btn"

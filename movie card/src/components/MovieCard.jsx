@@ -1,20 +1,65 @@
 import "./MovieCard.css";
+
 import toast from "react-hot-toast";
+
+import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 function MovieCard({ movie }) {
+
   const navigate = useNavigate();
 
+  const [isFavorite, setIsFavorite] =
+    useState(() => {
+
+      const favorites =
+        JSON.parse(
+          localStorage.getItem("favorites")
+        ) || [];
+
+      return favorites.some(
+        (item) => item.id === movie.id
+      );
+    });
+
   const addFavorite = () => {
+
     let favorites =
-      JSON.parse(localStorage.getItem("favorites")) || [];
+      JSON.parse(
+        localStorage.getItem("favorites")
+      ) || [];
+
+    if (isFavorite) {
+
+      const updated = favorites.filter(
+        (item) => item.id !== movie.id
+      );
+
+      localStorage.setItem(
+        "favorites",
+        JSON.stringify(updated)
+      );
+
+      setIsFavorite(false);
+
+      toast.success(
+        "Removed from Favorites"
+      );
+
+      return;
+    }
 
     const exists = favorites.find(
       (item) => item.id === movie.id
     );
 
     if (exists) {
-      toast.error("Already in favorites");
+
+      toast.error(
+        "Already in Favorites"
+      );
+
       return;
     }
 
@@ -25,19 +70,30 @@ function MovieCard({ movie }) {
       JSON.stringify(favorites)
     );
 
-    toast.success("Added to Favorites");
+    setIsFavorite(true);
+
+    toast.success(
+      "Added to Favorites"
+    );
   };
 
   const addWatchlist = () => {
+
     let watchlist =
-      JSON.parse(localStorage.getItem("watchlist")) || [];
+      JSON.parse(
+        localStorage.getItem("watchlist")
+      ) || [];
 
     const exists = watchlist.find(
       (item) => item.id === movie.id
     );
 
     if (exists) {
-      toast.error("Already in Watchlist");
+
+      toast.error(
+        "Already in Watchlist"
+      );
+
       return;
     }
 
@@ -48,19 +104,20 @@ function MovieCard({ movie }) {
       JSON.stringify(watchlist)
     );
 
-    toast.success("Added to Watchlist");
-  };
-
-  const goToDetails = () => {
-    navigate(`/movie/${movie.id}`);
+    toast.success(
+      "Added to Watchlist"
+    );
   };
 
   return (
+
     <div
       className="movie-card"
-      onClick={goToDetails}
-      style={{ cursor: "pointer" }}
+      onClick={() =>
+        navigate(`/movie/${movie.id}`)
+      }
     >
+
       <img
         src={movie.poster}
         alt={movie.title}
@@ -68,6 +125,7 @@ function MovieCard({ movie }) {
       />
 
       <div className="movie-content">
+
         <h2 className="movie-title">
           {movie.title}
         </h2>
@@ -85,27 +143,34 @@ function MovieCard({ movie }) {
             "No movie description available."}
         </p>
 
-        <div
-          className="movie-buttons"
-          onClick={(e) =>
-            e.stopPropagation()
-          }
-        >
+        <div className="movie-buttons">
+
           <button
             className="favorite-btn"
-            onClick={addFavorite}
+            onClick={(e) => {
+              e.stopPropagation();
+              addFavorite();
+            }}
           >
-            ❤️ Favorite
+            {isFavorite
+              ? "💔 Remove"
+              : "❤️ Favorite"}
           </button>
 
           <button
             className="watch-btn"
-            onClick={addWatchlist}
+            onClick={(e) => {
+              e.stopPropagation();
+              addWatchlist();
+            }}
           >
             👁 Watchlist
           </button>
+
         </div>
+
       </div>
+
     </div>
   );
 }

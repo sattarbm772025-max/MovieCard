@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
 import Navbar from "../components/Navbar";
 
@@ -6,12 +9,17 @@ import "../styles/Favorites.css";
 
 function Favorites() {
 
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] =
+    useState([]);
 
   useEffect(() => {
 
     const data =
-      JSON.parse(localStorage.getItem("favorites")) || [];
+      JSON.parse(
+        localStorage.getItem(
+          "favorites"
+        )
+      ) || [];
 
     setFavorites(data);
 
@@ -19,9 +27,11 @@ function Favorites() {
 
   const removeMovie = (id) => {
 
-    const updated = favorites.filter(
-      (movie) => movie.id !== id
-    );
+    const updated =
+      favorites.filter(
+        (movie) =>
+          movie.id !== id
+      );
 
     setFavorites(updated);
 
@@ -40,35 +50,63 @@ function Favorites() {
         ❤️ Favorite Movies
       </h1>
 
-      <div className="favorites-grid">
+      {favorites.length === 0 ? (
 
-        {favorites.map((movie) => (
+        <div className="empty-state">
 
-          <div
-            key={movie.id}
-            className="favorite-card"
-          >
+          <h2>
+            ❤️ No Favorites Yet
+          </h2>
 
-            <img
-              src={movie.poster}
-              alt={movie.title}
-            />
+          <p>
+            Add movies from Home page
+          </p>
 
-            <h2>{movie.title}</h2>
+        </div>
 
-            <p>{movie.genre}</p>
+      ) : (
 
-            <button
-              onClick={() => removeMovie(movie.id)}
-            >
-              Remove
-            </button>
+        <div className="favorites-grid">
 
-          </div>
+          {favorites.map(
+            (movie) => (
 
-        ))}
+              <div
+                key={movie.id}
+                className="favorite-card"
+              >
 
-      </div>
+                <img
+                  src={movie.poster}
+                  alt={movie.title}
+                />
+
+                <h2>
+                  {movie.title}
+                </h2>
+
+                <p>
+                  {movie.genre}
+                </p>
+
+                <button
+                  onClick={() =>
+                    removeMovie(
+                      movie.id
+                    )
+                  }
+                >
+                  Remove
+                </button>
+
+              </div>
+
+            )
+          )}
+
+        </div>
+
+      )}
 
     </div>
   );
