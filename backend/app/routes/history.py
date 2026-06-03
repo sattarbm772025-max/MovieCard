@@ -16,16 +16,31 @@ def get_db():
     finally:
         db.close()
 
+
 @router.get("/history")
 def get_history(
     db: Session = Depends(get_db)
 ):
 
-    return (
+    history = (
         db.query(SearchHistory)
+        .filter(
+            SearchHistory.user_id == 1
+        )
         .order_by(
             SearchHistory.searched_at.desc()
         )
-        .limit(20)
+        .limit(10)
         .all()
     )
+
+    return {
+        "success": True,
+        "data": [
+            {
+                "keyword": item.keyword,
+                "searched_at": item.searched_at
+            }
+            for item in history
+        ]
+    }
