@@ -9,6 +9,8 @@ import "../styles/Home.css";
 function Home() {
 
   const [movies, setMovies] = useState([]);
+  const [recommended, setRecommended] =
+    useState([]);
 
   const [loading, setLoading] =
     useState(false);
@@ -19,7 +21,9 @@ function Home() {
   const [genre, setGenre] =
     useState("All");
 
-  // FETCH MOVIES
+  // ====================
+  // MOVIES
+  // ====================
 
   const fetchMovies = async () => {
 
@@ -33,48 +37,52 @@ function Home() {
 
       const data = await response.json();
 
-      // GET FULL DETAILS
-
       const movieArray = data.Search
         ? await Promise.all(
 
-            data.Search.map(async (movie) => {
+            data.Search.map(
+              async (movie) => {
 
-              const detailsResponse =
-                await fetch(
-                  `http://127.0.0.1:8000/movies/${movie.imdbID}`
-                );
+                const detailsResponse =
+                  await fetch(
+                    `http://127.0.0.1:8000/movies/${movie.imdbID}`
+                  );
 
-              const details =
-                await detailsResponse.json();
+                const details =
+                  await detailsResponse.json();
 
-              return {
+                return {
 
-                id: movie.imdbID,
+                  id: movie.imdbID,
 
-                title: movie.Title,
+                  title: movie.Title,
 
-                poster:
-                  movie.Poster !== "N/A"
-                    ? movie.Poster
-                    : "https://via.placeholder.com/300x450",
+                  poster:
+                    movie.Poster !== "N/A"
+                      ? movie.Poster
+                      : "https://via.placeholder.com/300x450",
 
-                genre:
-                  details.Genre || "Unknown",
+                  genre:
+                    details.Genre ||
+                    "Unknown",
 
-                rating:
-                  details.imdbRating || "N/A",
+                  rating:
+                    details.imdbRating ||
+                    "N/A",
 
-                story:
-                  details.Plot ||
-                  "No description available",
-              };
-            })
+                  story:
+                    details.Plot ||
+                    "No description available",
+                };
+              }
+            )
 
           )
         : [];
 
       setMovies(movieArray);
+
+      fetchRecommendations();
 
     } catch (error) {
 
@@ -86,15 +94,39 @@ function Home() {
     }
   };
 
-  // INITIAL FETCH
+  // ====================
+  // RECOMMENDATIONS
+  // ====================
+
+  const fetchRecommendations =
+    async () => {
+
+      try {
+
+        const response =
+          await fetch(
+            "http://127.0.0.1:8000/recommendations"
+          );
+
+        const data =
+          await response.json();
+
+        setRecommended(
+          data.recommended_movies || []
+        );
+
+      } catch (error) {
+
+        console.log(error);
+      }
+    };
 
   useEffect(() => {
 
     fetchMovies();
+    fetchRecommendations();
 
   }, []);
-
-  // FILTER MOVIES
 
   const filteredMovies =
     movies.filter((movie) => {
@@ -112,15 +144,9 @@ function Home() {
   return (
     <div className="home">
 
-      {/* NAVBAR */}
-
       <Navbar />
 
-      {/* SEARCH SECTION */}
-
       <div className="search-section">
-
-        {/* SEARCH INPUT */}
 
         <input
           type="text"
@@ -130,8 +156,6 @@ function Home() {
             setSearch(e.target.value)
           }
         />
-
-        {/* FILTER */}
 
         <select
           value={genre}
@@ -178,8 +202,6 @@ function Home() {
 
         </select>
 
-        {/* SEARCH BUTTON */}
-
         <button
           className="search-btn"
           onClick={fetchMovies}
@@ -189,7 +211,63 @@ function Home() {
 
       </div>
 
-      {/* LOADER */}
+      {/* RECOMMENDATIONS */}
+
+      <div
+        style={{
+          marginTop: "30px",
+          marginBottom: "30px",
+        }}
+      >
+
+        <h2>
+          Recommended For You
+        </h2>
+
+        {recommended.length === 0 ? (
+
+          <p>
+            Start searching and
+            adding favorites to get
+            personalized recommendations.
+          </p>
+
+        ) : (
+
+          <div className="movies-grid">
+
+            {recommended.map(
+              (movie) => (
+
+                <div
+                  key={movie.id}
+                >
+
+                  <MovieCard
+                    movie={movie}
+                  />
+
+                  <p
+                    style={{
+                      textAlign:
+                        "center",
+                      marginTop:
+                        "5px",
+                    }}
+                  >
+                    {movie.reason}
+                  </p>
+
+                </div>
+
+              )
+            )}
+
+          </div>
+
+        )}
+
+      </div>
 
       {loading ? (
 
