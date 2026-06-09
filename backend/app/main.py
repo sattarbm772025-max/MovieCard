@@ -6,14 +6,11 @@ from app.database.connection import (
     engine
 )
 
-# Models
-
 from app.models.user import User
 from app.models.favorite import Favorite
 from app.models.review import Review
 from app.models.search_history import SearchHistory
-
-# Routes
+from app.models.viewed_movie import ViewedMovie
 
 from app.routes import (
     auth,
@@ -21,7 +18,8 @@ from app.routes import (
     favorites,
     reviews,
     history,
-    dashboard
+    dashboard,
+    recommendations
 )
 
 Base.metadata.create_all(bind=engine)
@@ -43,8 +41,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ROUTES
-
 app.include_router(auth.router)
 
 app.include_router(movies.router)
@@ -57,10 +53,14 @@ app.include_router(history.router)
 
 app.include_router(dashboard.router)
 
+app.include_router(
+    recommendations.router
+)
 
 @app.get("/")
 def home():
 
     return {
-        "message": "Movie Recommendation API Running"
+        "message":
+        "Movie Recommendation API Running"
     }
