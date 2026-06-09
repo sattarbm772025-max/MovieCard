@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 
 from app.database.connection import Base
 
-
 class User(Base):
 
     __tablename__ = "users"
@@ -25,8 +24,6 @@ class User(Base):
         nullable=False
     )
 
-    # Relationships
-
     favorites = relationship(
         "Favorite",
         backref="user",
@@ -41,6 +38,12 @@ class User(Base):
 
     search_history = relationship(
         "SearchHistory",
+        backref="user",
+        cascade="all, delete"
+    )
+
+    viewed_movies = relationship(
+        "ViewedMovie",
         backref="user",
         cascade="all, delete"
     )

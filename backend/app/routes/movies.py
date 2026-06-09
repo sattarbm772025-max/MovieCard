@@ -40,8 +40,6 @@ def search_movies(
     db: Session = Depends(get_db)
 ):
 
-    # VALIDATION
-
     if not title or not title.strip():
 
         raise HTTPException(
@@ -51,8 +49,6 @@ def search_movies(
                 "message": "Invalid request"
             }
         )
-
-    # DEMO USER
 
     user = (
         db.query(User)
@@ -70,8 +66,6 @@ def search_movies(
             }
         )
 
-    # SAVE SEARCH HISTORY
-
     last_search = (
         db.query(SearchHistory)
         .filter(
@@ -82,8 +76,6 @@ def search_movies(
         )
         .first()
     )
-
-    # PREVENT DUPLICATE CONSECUTIVE SEARCHES
 
     if (
         not last_search
@@ -97,10 +89,7 @@ def search_movies(
         )
 
         db.add(history)
-
         db.commit()
-
-    # OMDB SEARCH
 
     url = (
         f"https://www.omdbapi.com/"
@@ -137,3 +126,4 @@ def get_movie(
     response = requests.get(url)
 
     return response.json()
+
