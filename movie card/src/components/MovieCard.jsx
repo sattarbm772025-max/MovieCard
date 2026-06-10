@@ -77,36 +77,53 @@ function MovieCard({ movie }) {
     );
   };
 
-  const addWatchlist = () => {
+  const addWatchlist = async () => {
 
-    let watchlist =
-      JSON.parse(
-        localStorage.getItem("watchlist")
-      ) || [];
+    try {
 
-    const exists = watchlist.find(
-      (item) => item.id === movie.id
-    );
+      const response = await fetch(
+        "http://127.0.0.1:8000/watchlist",
+        {
+          method: "POST",
 
-    if (exists) {
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
 
-      toast.error(
-        "Already in Watchlist"
+          body: JSON.stringify({
+            movie_id: movie.id,
+            title: movie.title,
+            poster: movie.poster,
+            genre: movie.genre,
+          }),
+        }
       );
 
-      return;
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        toast.error(
+          data.detail
+        );
+
+        return;
+      }
+
+      toast.success(
+        "Added to Watchlist"
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+      toast.error(
+        "Failed to add watchlist"
+      );
     }
-
-    watchlist.push(movie);
-
-    localStorage.setItem(
-      "watchlist",
-      JSON.stringify(watchlist)
-    );
-
-    toast.success(
-      "Added to Watchlist"
-    );
   };
 
   return (
