@@ -1,74 +1,94 @@
-import { useEffect, useState } from "react";
-
-import Navbar from "../components/Navbar";
-
-import "../styles/Favorites.css";
+import {
+  useEffect,
+  useState,
+} from "react";
 
 function Watchlist() {
 
-  const [watchlist, setWatchlist] = useState([]);
+  const [movies, setMovies] =
+    useState([]);
+
+  const fetchWatchlist =
+    async () => {
+
+      const response =
+        await fetch(
+          "http://127.0.0.1:8000/watchlist"
+        );
+
+      const data =
+        await response.json();
+
+      setMovies(data);
+    };
 
   useEffect(() => {
 
-    const data =
-      JSON.parse(localStorage.getItem("watchlist")) || [];
-
-    setWatchlist(data);
+    fetchWatchlist();
 
   }, []);
 
-  const removeMovie = (id) => {
+  const removeMovie =
+    async (movieId) => {
 
-    const updated = watchlist.filter(
-      (movie) => movie.id !== id
+      await fetch(
+        `http://127.0.0.1:8000/watchlist/${movieId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      fetchWatchlist();
+    };
+
+  if (movies.length === 0) {
+
+    return (
+      <h2>
+        Your watchlist is empty.
+        Start adding movies to watch later.
+      </h2>
     );
-
-    setWatchlist(updated);
-
-    localStorage.setItem(
-      "watchlist",
-      JSON.stringify(updated)
-    );
-  };
+  }
 
   return (
-    <div className="favorites-page">
+    <div>
 
-      <Navbar />
-
-      <h1 className="favorites-title">
-        👁 Watchlist
+      <h1>
+        My Watchlist
       </h1>
 
-      <div className="favorites-grid">
+      {movies.map((movie) => (
 
-        {watchlist.map((movie) => (
+        <div
+          key={movie.movie_id}
+        >
 
-          <div
-            key={movie.id}
-            className="favorite-card"
+          <img
+            src={movie.poster}
+            width="120"
+          />
+
+          <h3>
+            {movie.title}
+          </h3>
+
+          <p>
+            {movie.genre}
+          </p>
+
+          <button
+            onClick={() =>
+              removeMovie(
+                movie.movie_id
+              )
+            }
           >
+            Remove
+          </button>
 
-            <img
-              src={movie.poster}
-              alt={movie.title}
-            />
-
-            <h2>{movie.title}</h2>
-
-            <p>{movie.genre}</p>
-
-            <button
-              onClick={() => removeMovie(movie.id)}
-            >
-              Remove
-            </button>
-
-          </div>
-
-        ))}
-
-      </div>
+        </div>
+      ))}
 
     </div>
   );
