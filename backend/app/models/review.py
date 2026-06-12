@@ -11,6 +11,7 @@ class Review(Base):
 
     __tablename__ = "reviews"
 
+
     id = Column(
         Integer,
         primary_key=True,
