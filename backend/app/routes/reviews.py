@@ -14,7 +14,6 @@ from app.schemas.review_schema import ReviewCreate
 
 router = APIRouter()
 
-
 def get_db():
 
     db = SessionLocal()
@@ -26,7 +25,9 @@ def get_db():
         db.close()
 
 
+# =========================
 # ADD REVIEW
+# =========================
 
 @router.post(
     "/reviews",
@@ -55,6 +56,24 @@ def add_review(
             detail="Review cannot be empty"
         )
 
+    # One Review Per Movie Validation
+
+    existing_review = (
+        db.query(Review)
+        .filter(
+            Review.movie_id == review.movie_id,
+            Review.user_id == 1
+        )
+        .first()
+    )
+
+    if existing_review:
+
+        raise HTTPException(
+            status_code=400,
+            detail="You already reviewed this movie"
+        )
+
     new_review = Review(
         movie_id=review.movie_id,
         review=review.review,
@@ -70,11 +89,18 @@ def add_review(
 
     return {
         "message": "Review added successfully",
-        "review": new_review
+        "review": {
+            "id": new_review.id,
+            "movie_id": new_review.movie_id,
+            "review": new_review.review,
+            "rating": new_review.rating
+        }
     }
 
 
-# GET REVIEWS WITH PAGINATION
+# =========================
+# GET REVIEWS
+# =========================
 
 @router.get("/reviews/{movie_id}")
 def get_reviews(
@@ -105,7 +131,9 @@ def get_reviews(
     return reviews
 
 
+# =========================
 # UPDATE REVIEW
+# =========================
 
 @router.put("/reviews/{review_id}")
 def update_review(
@@ -138,16 +166,12 @@ def update_review(
             detail="You can only edit your own review"
         )
 
-    # Rating Validation
-
     if review_data.rating < 1 or review_data.rating > 5:
 
         raise HTTPException(
             status_code=400,
             detail="Rating must be between 1 and 5"
         )
-
-    # Empty Review Validation
 
     if not review_data.review.strip():
 
@@ -165,11 +189,18 @@ def update_review(
 
     return {
         "message": "Review updated successfully",
-        "review": review
+        "review": {
+            "id": review.id,
+            "movie_id": review.movie_id,
+            "review": review.review,
+            "rating": review.rating
+        }
     }
 
 
+# =========================
 # DELETE REVIEW
+# =========================
 
 @router.delete("/reviews/{review_id}")
 def delete_review(
@@ -192,8 +223,6 @@ def delete_review(
             detail="Review not found"
         )
 
-    # Owner Validation
-
     if review.user_id != 1:
 
         raise HTTPException(
@@ -210,7 +239,9 @@ def delete_review(
     }
 
 
-# AVERAGE RATING (BONUS)
+# =========================
+# AVERAGE MOVIE RATING
+# =========================
 
 @router.get("/reviews/average/{movie_id}")
 def average_rating(
@@ -230,7 +261,16 @@ def average_rating(
         .scalar()
     )
 
+    total_reviews = (
+        db.query(Review)
+        .filter(
+            Review.movie_id == movie_id
+        )
+        .count()
+    )
+
     return {
         "movie_id": movie_id,
-        "average_rating": round(avg, 2) if avg else 0
+        "average_rating": round(avg, 2) if avg else 0,
+        "total_reviews": total_reviews
     }
