@@ -9,12 +9,14 @@ import Register from "./pages/Register";
 import Favorites from "./pages/Favorites";
 import Watchlist from "./pages/Watchlist";
 import MovieDetails from "./pages/MovieDetails";
+import Profile from "./pages/Profile";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
 import { Toaster } from "react-hot-toast";
 
 function App() {
+
   return (
     <>
       <Toaster position="top-right" />
@@ -35,6 +37,15 @@ function App() {
           element={
             <ProtectedRoute>
               <MovieDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />

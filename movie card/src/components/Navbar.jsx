@@ -84,6 +84,7 @@ function Navbar() {
   };
 
   return (
+
     <nav className="navbar">
 
       <div className="logo">
@@ -104,6 +105,10 @@ function Navbar() {
 
             <Link to="/watchlist">
               Watchlist
+            </Link>
+
+            <Link to="/profile">
+              Profile
             </Link>
           </>
         )}
