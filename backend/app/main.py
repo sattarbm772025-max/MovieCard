@@ -12,6 +12,7 @@ from app.models.review import Review
 from app.models.search_history import SearchHistory
 from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
+from app.routes import profile
 
 from app.routes import (
     auth,
@@ -61,6 +62,9 @@ app.include_router(
 
 app.include_router(
     watchlist.router
+)
+app.include_router(
+    profile.router
 )
 
 @app.get("/")
