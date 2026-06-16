@@ -110,6 +110,10 @@ function Navbar() {
             <Link to="/profile">
               Profile
             </Link>
+
+            <Link to="/admin">
+              Admin
+            </Link>
           </>
         )}
 

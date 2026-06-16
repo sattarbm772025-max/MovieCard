@@ -1,7 +1,14 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Boolean
+)
+
 from sqlalchemy.orm import relationship
 
 from app.database.connection import Base
+
 
 class User(Base):
 
@@ -27,6 +34,11 @@ class User(Base):
     password = Column(
         String,
         nullable=False
+    )
+
+    is_admin = Column(
+        Boolean,
+        default=False
     )
 
     favorites = relationship(
