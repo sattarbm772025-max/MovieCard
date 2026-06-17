@@ -3,12 +3,16 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 
 from app.database.connection import SessionLocal
+
 from app.models.user import User
 from app.models.review import Review
 from app.models.favorite import Favorite
 from app.models.search_history import SearchHistory
 
+from app.utils.dependencies import get_current_user
+
 router = APIRouter()
+
 
 def get_db():
 
@@ -21,43 +25,62 @@ def get_db():
         db.close()
 
 
-def check_admin(db):
+def check_admin(
+    current_user: User
+):
 
-    admin = db.query(User).filter(
-        User.id == 1
-    ).first()
-
-    if not admin :
+    if not current_user.is_admin:
 
         raise HTTPException(
-            status_code=404,
-            detail="Admin not found"
+            status_code=403,
+            detail="Admin access required"
         )
-
-    return admin
 
 
 @router.get("/admin/users")
 def get_users(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
 ):
 
-    check_admin(db)
+    check_admin(current_user)
 
     return db.query(User).all()
+
+
+@router.get("/admin/reviews")
+def get_reviews(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    check_admin(current_user)
+
+    return db.query(Review).all()
 
 
 @router.delete("/admin/reviews/{review_id}")
 def delete_review(
     review_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
 ):
 
-    check_admin(db)
+    check_admin(current_user)
 
-    review = db.query(Review).filter(
-        Review.id == review_id
-    ).first()
+    review = (
+        db.query(Review)
+        .filter(
+            Review.id == review_id
+        )
+        .first()
+    )
 
     if not review:
 
@@ -67,6 +90,7 @@ def delete_review(
         )
 
     db.delete(review)
+
     db.commit()
 
     return {
@@ -77,20 +101,28 @@ def delete_review(
 
 @router.get("/admin/stats")
 def get_stats(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(
+        get_current_user
+    )
 ):
 
-    check_admin(db)
+    check_admin(current_user)
 
-    total_users = db.query(User).count()
+    total_users = (
+        db.query(User)
+        .count()
+    )
 
-    total_reviews = db.query(
-        Review
-    ).count()
+    total_reviews = (
+        db.query(Review)
+        .count()
+    )
 
-    total_favorites = db.query(
-        Favorite
-    ).count()
+    total_favorites = (
+        db.query(Favorite)
+        .count()
+    )
 
     searched = (
         db.query(
@@ -111,6 +143,7 @@ def get_stats(
     )
 
     return {
+
         "total_users":
         total_users,
 
@@ -122,12 +155,6 @@ def get_stats(
 
         "most_searched_movie":
         searched.keyword
-        if searched else "N/A"
+        if searched
+        else "N/A"
     }
-@router.get("/admin/reviews")
-def get_reviews(
-    db: Session = Depends(get_db)
-):
-    check_admin(db)
-
-    return db.query(Review).all()

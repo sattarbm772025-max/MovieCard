@@ -30,39 +30,64 @@ function Login() {
   const [password, setPassword] =
     useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
 
     e.preventDefault();
 
-    const savedUser =
-      JSON.parse(
-        localStorage.getItem("user")
+    try {
+
+      const response =
+        await fetch(
+          "http://127.0.0.1:8000/login",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              email,
+              password
+            })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        toast.error(
+          data.detail ||
+          "Login Failed"
+        );
+
+        return;
+      }
+
+      localStorage.setItem(
+        "token",
+        data.access_token
       );
 
-    if (
-      !savedUser ||
-      savedUser.email !== email ||
-      savedUser.password !== password
-    ) {
+      login(
+        data.access_token
+      );
+
+      toast.success(
+        "Login Successful"
+      );
+
+      navigate("/");
+
+    } catch (error) {
 
       toast.error(
-        "Invalid Credentials"
+        "Server Error"
       );
-
-      return;
     }
-
-    // SAVE TOKEN
-
-    login("movie_app_token");
-
-    toast.success(
-      "Login Successful"
-    );
-
-    // GO HOME
-
-    navigate("/");
   };
 
   return (
@@ -82,6 +107,7 @@ function Login() {
           onChange={(e) =>
             setEmail(e.target.value)
           }
+          required
         />
 
         <input
@@ -91,6 +117,7 @@ function Login() {
           onChange={(e) =>
             setPassword(e.target.value)
           }
+          required
         />
 
         <button type="submit">
