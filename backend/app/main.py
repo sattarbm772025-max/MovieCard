@@ -12,7 +12,6 @@ from app.models.review import Review
 from app.models.search_history import SearchHistory
 from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
-from app.routes import profile
 
 from app.routes import (
     auth,
@@ -22,7 +21,9 @@ from app.routes import (
     history,
     dashboard,
     recommendations,
-    watchlist
+    watchlist,
+    profile,
+    admin
 )
 
 Base.metadata.create_all(bind=engine)
@@ -63,8 +64,13 @@ app.include_router(
 app.include_router(
     watchlist.router
 )
+
 app.include_router(
     profile.router
+)
+
+app.include_router(
+    admin.router
 )
 
 @app.get("/")

@@ -16,44 +16,65 @@ function Register() {
   const navigate =
     useNavigate();
 
+  const [username, setUsername] =
+    useState("");
+
   const [email, setEmail] =
     useState("");
 
   const [password, setPassword] =
     useState("");
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
 
     e.preventDefault();
 
-    if (!email || !password) {
+    try {
 
-      toast.error(
-        "All fields required"
+      const response =
+        await fetch(
+          "http://127.0.0.1:8000/register",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              username,
+              email,
+              password
+            })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        toast.error(
+          data.detail ||
+          "Registration Failed"
+        );
+
+        return;
+      }
+
+      toast.success(
+        "Registration Successful"
       );
 
-      return;
+      navigate("/login");
+
+    } catch (error) {
+
+      toast.error(
+        "Server Error"
+      );
     }
-
-    // SAVE USER
-
-    const user = {
-      email,
-      password,
-    };
-
-    localStorage.setItem(
-      "user",
-      JSON.stringify(user)
-    );
-
-    toast.success(
-      "Registration Successful"
-    );
-
-    // GO LOGIN
-
-    navigate("/login");
   };
 
   return (
@@ -67,12 +88,23 @@ function Register() {
         <h1>Register</h1>
 
         <input
+          type="text"
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) =>
+            setUsername(e.target.value)
+          }
+          required
+        />
+
+        <input
           type="email"
           placeholder="Enter Email"
           value={email}
           onChange={(e) =>
             setEmail(e.target.value)
           }
+          required
         />
 
         <input
@@ -82,6 +114,7 @@ function Register() {
           onChange={(e) =>
             setPassword(e.target.value)
           }
+          required
         />
 
         <button type="submit">
