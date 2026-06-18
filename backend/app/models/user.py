@@ -70,3 +70,9 @@ class User(Base):
         backref="user",
         cascade="all, delete"
     )
+    
+    collections = relationship(
+    "Collection",
+    backref="user",
+    cascade="all, delete"
+)
