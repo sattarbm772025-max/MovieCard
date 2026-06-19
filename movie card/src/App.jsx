@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import Collections from "./pages/Collections";
 
 import { Toaster } from "react-hot-toast";
 
@@ -86,6 +87,10 @@ function App() {
               <Watchlist />
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/collections"
+          element={<Collections />}
         />
 
       </Routes>

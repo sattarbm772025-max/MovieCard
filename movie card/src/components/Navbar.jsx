@@ -106,6 +106,9 @@ function Navbar() {
             <Link to="/watchlist">
               Watchlist
             </Link>
+            <Link to="/collections">
+              Collections
+            </Link>
 
             <Link to="/profile">
               Profile
