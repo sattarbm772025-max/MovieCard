@@ -2,11 +2,17 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from passlib.context import CryptContext
 
 from app.database.connection import SessionLocal
 from app.models.user import User
+from app.utils.dependencies import get_current_user
 
 router = APIRouter()
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
 
 def get_db():
 
@@ -21,11 +27,12 @@ def get_db():
 
 @router.get("/profile")
 def get_profile(
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     user = db.query(User).filter(
-        User.id == 1
+        User.id == current_user.id
     ).first()
 
     if not user:
@@ -44,11 +51,12 @@ def get_profile(
 @router.put("/profile")
 def update_profile(
     data: dict,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     user = db.query(User).filter(
-        User.id == 1
+        User.id == current_user.id
     ).first()
 
     if not user:
@@ -61,7 +69,7 @@ def update_profile(
         db.query(User)
         .filter(
             User.email == data["email"],
-            User.id != 1
+            User.id != current_user.id
         )
         .first()
     )
@@ -86,11 +94,12 @@ def update_profile(
 @router.put("/profile/change-password")
 def change_password(
     data: dict,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     user = db.query(User).filter(
-        User.id == 1
+        User.id == current_user.id
     ).first()
 
     if not user:
@@ -105,7 +114,7 @@ def change_password(
             detail="Password must be at least 6 characters"
         )
 
-    user.password = data["new_password"]
+    user.password = pwd_context.hash(data["new_password"])
 
     db.commit()
 

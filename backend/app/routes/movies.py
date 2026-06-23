@@ -15,6 +15,7 @@ from app.database.connection import SessionLocal
 
 from app.models.search_history import SearchHistory
 from app.models.user import User
+from app.utils.dependencies import get_current_user
 
 load_dotenv()
 
@@ -37,6 +38,7 @@ def get_db():
 @router.get("/movies/search")
 def search_movies(
     title: str,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
@@ -50,26 +52,10 @@ def search_movies(
             }
         )
 
-    user = (
-        db.query(User)
-        .filter(User.id == 1)
-        .first()
-    )
-
-    if not user:
-
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "success": False,
-                "message": "User not found"
-            }
-        )
-
     last_search = (
         db.query(SearchHistory)
         .filter(
-            SearchHistory.user_id == 1
+            SearchHistory.user_id == current_user.id
         )
         .order_by(
             SearchHistory.searched_at.desc()
@@ -85,7 +71,7 @@ def search_movies(
 
         history = SearchHistory(
             keyword=title,
-            user_id=1
+            user_id=current_user.id
         )
 
         db.add(history)

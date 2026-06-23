@@ -13,7 +13,6 @@ from app.models.search_history import SearchHistory
 from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
 from app.models.collection import Collection
-from app.routes import collections
 from app.models.collection_movie import CollectionMovie
 
 from app.routes import (
@@ -50,40 +49,21 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
-
 app.include_router(movies.router)
-
 app.include_router(favorites.router)
-
 app.include_router(reviews.router)
-
 app.include_router(history.router)
-
 app.include_router(dashboard.router)
+app.include_router(recommendations.router)
+app.include_router(watchlist.router)
+app.include_router(profile.router)
+app.include_router(admin.router)
+app.include_router(collections.router)
 
-app.include_router(
-    recommendations.router
-)
-
-app.include_router(
-    watchlist.router
-)
-
-app.include_router(
-    profile.router
-)
-
-app.include_router(
-    admin.router
-)
-app.include_router(
-    collections.router
-)
 
 @app.get("/")
 def home():
 
     return {
-        "message":
-        "Movie Recommendation API Running"
+        "message": "Movie Recommendation API Running"
     }

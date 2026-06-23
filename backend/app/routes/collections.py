@@ -10,6 +10,8 @@ from app.database.connection import SessionLocal
 
 from app.models.collection import Collection
 from app.models.collection_movie import CollectionMovie
+from app.models.user import User
+from app.utils.dependencies import get_current_user
 
 from app.schemas.collection_schema import (
     CollectionCreate,
@@ -33,11 +35,12 @@ def get_db():
 @router.post("/collections")
 def create_collection(
     collection: CollectionCreate,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     new_collection = Collection(
-        user_id=1,
+        user_id=current_user.id,
         name=collection.name,
         description=collection.description
     )
@@ -56,12 +59,13 @@ def create_collection(
 
 @router.get("/collections")
 def get_collections(
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     return (
         db.query(Collection)
-        .filter(Collection.user_id == 1)
+        .filter(Collection.user_id == current_user.id)
         .all()
     )
 
@@ -70,12 +74,16 @@ def get_collections(
 def update_collection(
     collection_id: int,
     data: CollectionCreate,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     collection = (
         db.query(Collection)
-        .filter(Collection.id == collection_id)
+        .filter(
+            Collection.id == collection_id,
+            Collection.user_id == current_user.id
+        )
         .first()
     )
 
@@ -101,12 +109,16 @@ def update_collection(
 @router.delete("/collections/{collection_id}")
 def delete_collection(
     collection_id: int,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
     collection = (
         db.query(Collection)
-        .filter(Collection.id == collection_id)
+        .filter(
+            Collection.id == collection_id,
+            Collection.user_id == current_user.id
+        )
         .first()
     )
 
@@ -131,8 +143,25 @@ def delete_collection(
 def add_movie_to_collection(
     collection_id: int,
     movie: CollectionMovieCreate,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+
+    collection = (
+        db.query(Collection)
+        .filter(
+            Collection.id == collection_id,
+            Collection.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if not collection:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
 
     new_movie = CollectionMovie(
         collection_id=collection_id,
@@ -155,8 +184,25 @@ def add_movie_to_collection(
 @router.get("/collections/{collection_id}/movies")
 def get_collection_movies(
     collection_id: int,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+
+    collection = (
+        db.query(Collection)
+        .filter(
+            Collection.id == collection_id,
+            Collection.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if not collection:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
 
     return (
         db.query(CollectionMovie)
@@ -174,8 +220,25 @@ def get_collection_movies(
 def remove_movie(
     collection_id: int,
     movie_id: str,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+
+    collection = (
+        db.query(Collection)
+        .filter(
+            Collection.id == collection_id,
+            Collection.user_id == current_user.id
+        )
+        .first()
+    )
+
+    if not collection:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Collection not found"
+        )
 
     movie = (
         db.query(CollectionMovie)
@@ -203,3 +266,4 @@ def remove_movie(
         "message":
         "Movie removed"
     }
+    
