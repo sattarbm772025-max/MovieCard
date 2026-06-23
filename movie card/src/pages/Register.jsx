@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 
 import toast from "react-hot-toast";
-
+import API from "../api/axios";
 import "../styles/Auth.css";
 
 function Register() {
@@ -31,38 +31,14 @@ function Register() {
 
     try {
 
-      const response =
-        await fetch(
-          "http://127.0.0.1:8000/register",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              username,
-              email,
-              password
-            })
-          }
-        );
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-
-        toast.error(
-          data.detail ||
-          "Registration Failed"
-        );
-
-        return;
-      }
-
+      await API.post(
+        "/register",
+        {
+          username,
+          email,
+          password,
+        }
+      );
       toast.success(
         "Registration Successful"
       );
@@ -72,6 +48,7 @@ function Register() {
     } catch (error) {
 
       toast.error(
+        error.response?.data?.detail ||
         "Server Error"
       );
     }

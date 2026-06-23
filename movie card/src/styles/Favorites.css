@@ -114,6 +114,11 @@
   background: orange;
 }
 
+.favorite-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 /* ========================= */
 /* LIGHT MODE */
 /* ========================= */
@@ -154,6 +159,7 @@ body.light-mode .favorite-card p {
     height: 300px;
   }
 }
+
 .empty-state {
   text-align: center;
   margin-top: 100px;

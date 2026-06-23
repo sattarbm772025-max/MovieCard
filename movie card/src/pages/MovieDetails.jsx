@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
 import { useParams } from "react-router-dom";
 
+import API from "../api/axios";
 import Navbar from "../components/Navbar";
 
 import "../styles/MovieDetails.css";
@@ -9,7 +15,8 @@ function MovieDetails() {
 
   const { id } = useParams();
 
-  const [movie, setMovie] = useState(null);
+  const [movie, setMovie] =
+    useState(null);
 
   const [loading, setLoading] =
     useState(true);
@@ -26,17 +33,14 @@ function MovieDetails() {
   const [averageRating, setAverageRating] =
     useState(0);
 
-  const fetchMovie = async () => {
+  const fetchMovie = useCallback(async () => {
 
     try {
 
-      const response = await fetch(
-        `http://127.0.0.1:8000/movies/${id}`
-      );
+      const response =
+        await API.get(`/movies/${id}`);
 
-      const data = await response.json();
-
-      setMovie(data);
+      setMovie(response.data);
 
     } catch (error) {
 
@@ -46,112 +50,87 @@ function MovieDetails() {
 
       setLoading(false);
     }
-  };
+  }, [id]);
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
 
     try {
 
-      const response = await fetch(
-        `http://127.0.0.1:8000/reviews/${id}`
-      );
+      const response =
+        await API.get(`/reviews/${id}`);
 
-      const data = await response.json();
-
-      setReviews(data);
+      setReviews(response.data);
 
     } catch (error) {
 
       console.log(error);
     }
-  };
+  }, [id]);
 
   const fetchAverageRating =
-    async () => {
+    useCallback(async () => {
 
       try {
 
         const response =
-          await fetch(
-            `http://127.0.0.1:8000/reviews/average/${id}`
+          await API.get(
+            `/reviews/average/${id}`
           );
 
-        const data =
-          await response.json();
-
         setAverageRating(
-          data.average_rating
+          response.data.average_rating
         );
 
       } catch (error) {
 
         console.log(error);
       }
-    };
+    }, [id]);
 
   const submitReview =
     async () => {
 
       try {
 
-        const response =
-          await fetch(
-            "http://127.0.0.1:8000/reviews",
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-
-              body: JSON.stringify({
-                movie_id: id,
-                review: reviewText,
-                rating: rating,
-              }),
-            }
-          );
-
-        const data =
-          await response.json();
-
-        if (!response.ok) {
-
-          alert(
-            data.detail
-          );
-
-          return;
-        }
+        await API.post(
+          "/reviews",
+          {
+            movie_id: id,
+            review: reviewText,
+            rating,
+          }
+        );
 
         alert(
           "Review Added Successfully"
         );
 
         setReviewText("");
-
         setRating(5);
 
         fetchReviews();
-
         fetchAverageRating();
 
       } catch (error) {
 
-        console.log(error);
+        alert(
+          error.response?.data?.detail ||
+          "Failed to add review"
+        );
       }
     };
 
   useEffect(() => {
 
     fetchMovie();
-
     fetchReviews();
-
     fetchAverageRating();
 
-  }, [id]);
+  }, [
+    fetchAverageRating,
+    fetchMovie,
+    fetchReviews,
+  ]);
 
   if (loading) {
 
@@ -171,8 +150,25 @@ function MovieDetails() {
     );
   }
 
-  return (
+  if (!movie) {
 
+    return (
+      <>
+        <Navbar />
+
+        <h2
+          style={{
+            textAlign: "center",
+            marginTop: "50px",
+          }}
+        >
+          Movie not found
+        </h2>
+      </>
+    );
+  }
+
+  return (
     <div className="details-page">
 
       <Navbar />
@@ -203,14 +199,12 @@ function MovieDetails() {
 
           <p>
             <strong>IMDb Rating:</strong>{" "}
-            ⭐ {movie.imdbRating}
+            {movie.imdbRating}
           </p>
 
           <p>
-            <strong>
-              User Rating:
-            </strong>{" "}
-            ⭐ {averageRating}
+            <strong>User Rating:</strong>{" "}
+            {averageRating}
           </p>
 
           <p>
@@ -231,9 +225,9 @@ function MovieDetails() {
               padding: "10px",
             }}
             value={reviewText}
-            onChange={(e) =>
+            onChange={(event) =>
               setReviewText(
-                e.target.value
+                event.target.value
               )
             }
             placeholder="Write your review..."
@@ -246,27 +240,28 @@ function MovieDetails() {
             }}
           >
 
-            {[1,2,3,4,5].map(
+            {[1, 2, 3, 4, 5].map(
               (star) => (
 
-                <span
+                <button
                   key={star}
+                  type="button"
                   onClick={() =>
                     setRating(star)
                   }
                   style={{
-                    cursor:
-                      "pointer",
-                    fontSize:
-                      "30px",
+                    cursor: "pointer",
+                    fontSize: "30px",
                     color:
                       rating >= star
                         ? "gold"
                         : "gray",
+                    background: "transparent",
+                    border: "none",
                   }}
                 >
-                  ★
-                </span>
+                  *
+                </button>
 
               )
             )}
@@ -274,9 +269,7 @@ function MovieDetails() {
           </div>
 
           <button
-            onClick={
-              submitReview
-            }
+            onClick={submitReview}
           >
             Submit Review
           </button>
@@ -301,17 +294,14 @@ function MovieDetails() {
                 <div
                   key={review.id}
                   style={{
-                    marginBottom:
-                      "20px",
-                    paddingBottom:
-                      "10px",
-                    borderBottom:
-                      "1px solid #ddd",
+                    marginBottom: "20px",
+                    paddingBottom: "10px",
+                    borderBottom: "1px solid #ddd",
                   }}
                 >
 
                   <p>
-                    ⭐ {review.rating}/5
+                    Rating: {review.rating}/5
                   </p>
 
                   <p>

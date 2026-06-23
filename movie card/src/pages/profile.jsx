@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 
+import API from "../api/axios";
+import Navbar from "../components/Navbar";
+
 function Profile() {
 
   const [profile, setProfile] =
     useState({
       username: "",
-      email: ""
+      email: "",
     });
 
   const [password, setPassword] =
@@ -13,12 +16,9 @@ function Profile() {
 
   useEffect(() => {
 
-    fetch(
-      "http://127.0.0.1:8000/profile"
-    )
-      .then((res) => res.json())
-      .then((data) =>
-        setProfile(data)
+    API.get("/profile")
+      .then((response) =>
+        setProfile(response.data)
       );
 
   }, []);
@@ -26,18 +26,9 @@ function Profile() {
   const updateProfile =
     async () => {
 
-      await fetch(
-        "http://127.0.0.1:8000/profile",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-          body: JSON.stringify(
-            profile
-          )
-        }
+      await API.put(
+        "/profile",
+        profile
       );
 
       alert(
@@ -48,18 +39,11 @@ function Profile() {
   const changePassword =
     async () => {
 
-      await fetch(
-        "http://127.0.0.1:8000/profile/change-password",
+      await API.put(
+        "/profile/change-password",
         {
-          method: "PUT",
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
-          body: JSON.stringify({
-            new_password:
-              password
-          })
+          new_password:
+            password,
         }
       );
 
@@ -72,74 +56,78 @@ function Profile() {
 
   return (
 
-    <div
-      style={{
-        maxWidth: "500px",
-        margin: "30px auto"
-      }}
-    >
+    <>
+      <Navbar />
 
-      <h2>
-        User Profile
-      </h2>
-
-      <input
-        type="text"
-        value={profile.username}
-        onChange={(e) =>
-          setProfile({
-            ...profile,
-            username:
-              e.target.value
-          })
-        }
-      />
-
-      <input
-        type="email"
-        value={profile.email}
-        onChange={(e) =>
-          setProfile({
-            ...profile,
-            email:
-              e.target.value
-          })
-        }
-      />
-
-      <button
-        onClick={
-          updateProfile
-        }
+      <div
+        style={{
+          maxWidth: "500px",
+          margin: "30px auto",
+        }}
       >
-        Update Profile
-      </button>
 
-      <hr />
+        <h2>
+          User Profile
+        </h2>
 
-      <h3>
-        Change Password
-      </h3>
+        <input
+          type="text"
+          value={profile.username}
+          onChange={(event) =>
+            setProfile({
+              ...profile,
+              username:
+                event.target.value,
+            })
+          }
+        />
 
-      <input
-        type="password"
-        value={password}
-        onChange={(e) =>
-          setPassword(
-            e.target.value
-          )
-        }
-      />
+        <input
+          type="email"
+          value={profile.email}
+          onChange={(event) =>
+            setProfile({
+              ...profile,
+              email:
+                event.target.value,
+            })
+          }
+        />
 
-      <button
-        onClick={
-          changePassword
-        }
-      >
-        Change Password
-      </button>
+        <button
+          onClick={
+            updateProfile
+          }
+        >
+          Update Profile
+        </button>
 
-    </div>
+        <hr />
+
+        <h3>
+          Change Password
+        </h3>
+
+        <input
+          type="password"
+          value={password}
+          onChange={(event) =>
+            setPassword(
+              event.target.value
+            )
+          }
+        />
+
+        <button
+          onClick={
+            changePassword
+          }
+        >
+          Change Password
+        </button>
+
+      </div>
+    </>
   );
 }
 

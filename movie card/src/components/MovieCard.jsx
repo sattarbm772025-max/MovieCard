@@ -1,116 +1,109 @@
-import "./MovieCard.css";
-
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { useState } from "react";
-
-import { useNavigate } from "react-router-dom";
+import API from "../api/axios";
+import "./MovieCard.css";
 
 function MovieCard({ movie }) {
 
   const navigate = useNavigate();
 
   const [isFavorite, setIsFavorite] =
-    useState(() => {
+    useState(false);
 
-      const favorites =
-        JSON.parse(
-          localStorage.getItem("favorites")
-        ) || [];
+  useEffect(() => {
 
-      return favorites.some(
-        (item) => item.id === movie.id
+    let active = true;
+
+    const checkFavorite = async () => {
+
+      try {
+
+        const response =
+          await API.get("/favorites");
+
+        if (!active) return;
+
+        setIsFavorite(
+          response.data.some(
+            (item) =>
+              item.movie_id === movie.id
+          )
+        );
+
+      } catch {
+
+        if (active) {
+          setIsFavorite(false);
+        }
+      }
+    };
+
+    checkFavorite();
+
+    return () => {
+      active = false;
+    };
+
+  }, [movie.id]);
+
+  const addFavorite = async () => {
+
+    try {
+
+      if (isFavorite) {
+
+        await API.delete(
+          `/favorites/${movie.id}`
+        );
+
+        setIsFavorite(false);
+
+        toast.success(
+          "Removed from Favorites"
+        );
+
+        return;
+      }
+
+      await API.post(
+        "/favorites",
+        {
+          movie_id: movie.id,
+          title: movie.title,
+          poster: movie.poster,
+        }
       );
-    });
 
-  const addFavorite = () => {
-
-    let favorites =
-      JSON.parse(
-        localStorage.getItem("favorites")
-      ) || [];
-
-    if (isFavorite) {
-
-      const updated = favorites.filter(
-        (item) => item.id !== movie.id
-      );
-
-      localStorage.setItem(
-        "favorites",
-        JSON.stringify(updated)
-      );
-
-      setIsFavorite(false);
+      setIsFavorite(true);
 
       toast.success(
-        "Removed from Favorites"
+        "Added to Favorites"
       );
 
-      return;
-    }
-
-    const exists = favorites.find(
-      (item) => item.id === movie.id
-    );
-
-    if (exists) {
+    } catch (error) {
 
       toast.error(
-        "Already in Favorites"
+        error.response?.data?.detail ||
+        "Failed to update favorite"
       );
-
-      return;
     }
-
-    favorites.push(movie);
-
-    localStorage.setItem(
-      "favorites",
-      JSON.stringify(favorites)
-    );
-
-    setIsFavorite(true);
-
-    toast.success(
-      "Added to Favorites"
-    );
   };
 
   const addWatchlist = async () => {
 
     try {
 
-      const response = await fetch(
-        "http://127.0.0.1:8000/watchlist",
+      await API.post(
+        "/watchlist",
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify({
-            movie_id: movie.id,
-            title: movie.title,
-            poster: movie.poster,
-            genre: movie.genre,
-          }),
+          movie_id: movie.id,
+          title: movie.title,
+          poster: movie.poster,
+          genre: movie.genre,
         }
       );
-
-      const data =
-        await response.json();
-
-      if (!response.ok) {
-
-        toast.error(
-          data.detail
-        );
-
-        return;
-      }
 
       toast.success(
         "Added to Watchlist"
@@ -118,9 +111,8 @@ function MovieCard({ movie }) {
 
     } catch (error) {
 
-      console.log(error);
-
       toast.error(
+        error.response?.data?.detail ||
         "Failed to add watchlist"
       );
     }
@@ -148,11 +140,11 @@ function MovieCard({ movie }) {
         </h2>
 
         <p className="movie-genre">
-          🎭 {movie.genre}
+          Genre: {movie.genre}
         </p>
 
         <div className="movie-rating">
-          ⭐ {movie.rating}
+          Rating: {movie.rating}
         </div>
 
         <p className="movie-story">
@@ -170,8 +162,8 @@ function MovieCard({ movie }) {
             }}
           >
             {isFavorite
-              ? "💔 Remove"
-              : "❤️ Favorite"}
+              ? "Remove"
+              : "Favorite"}
           </button>
 
           <button
@@ -181,7 +173,7 @@ function MovieCard({ movie }) {
               addWatchlist();
             }}
           >
-            👁 Watchlist
+            Watchlist
           </button>
 
         </div>
