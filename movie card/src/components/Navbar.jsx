@@ -21,16 +21,12 @@ function Navbar() {
 
   const {
     token,
+    isAdmin,
     logout,
   } = useContext(AuthContext);
 
   const [darkMode, setDarkMode] =
     useState(true);
-
-  const favoriteCount =
-    JSON.parse(
-      localStorage.getItem("favorites")
-    )?.length || 0;
 
   useEffect(() => {
 
@@ -84,7 +80,6 @@ function Navbar() {
   };
 
   return (
-
     <nav className="navbar">
 
       <div className="logo">
@@ -100,12 +95,13 @@ function Navbar() {
         {token && (
           <>
             <Link to="/favorites">
-              Favorites ({favoriteCount})
+              Favorites
             </Link>
 
             <Link to="/watchlist">
               Watchlist
             </Link>
+
             <Link to="/collections">
               Collections
             </Link>
@@ -114,9 +110,11 @@ function Navbar() {
               Profile
             </Link>
 
-            <Link to="/admin">
-              Admin
-            </Link>
+            {isAdmin && (
+              <Link to="/admin">
+                Admin
+              </Link>
+            )}
           </>
         )}
 
@@ -143,7 +141,7 @@ function Navbar() {
           className="theme-btn"
           onClick={toggleTheme}
         >
-          {darkMode ? "☀️" : "🌙"}
+          {darkMode ? "Light" : "Dark"}
         </button>
 
       </div>

@@ -14,6 +14,8 @@ import {
   AuthContext,
 } from "../context/AuthContext";
 
+import API from "../api/axios";
+
 import "../styles/Auth.css";
 
 function Login() {
@@ -37,43 +39,35 @@ function Login() {
     try {
 
       const response =
-        await fetch(
-          "http://127.0.0.1:8000/login",
+        await API.post(
+          "/login",
           {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              email,
-              password
-            })
+            email,
+            password,
           }
         );
 
       const data =
-        await response.json();
-
-      if (!response.ok) {
-
-        toast.error(
-          data.detail ||
-          "Login Failed"
-        );
-
-        return;
-      }
+        response.data;
 
       localStorage.setItem(
         "token",
         data.access_token
       );
 
+      localStorage.setItem(
+        "user_id",
+        data.user_id
+      );
+
+      localStorage.setItem(
+        "is_admin",
+        String(Boolean(data.is_admin))
+      );
+
       login(
-        data.access_token
+        data.access_token,
+        data.is_admin
       );
 
       toast.success(
@@ -85,6 +79,7 @@ function Login() {
     } catch (error) {
 
       toast.error(
+        error.response?.data?.detail ||
         "Server Error"
       );
     }
@@ -125,13 +120,11 @@ function Login() {
         </button>
 
         <p>
-
           No account?
 
           <Link to="/register">
             Register
           </Link>
-
         </p>
 
       </form>

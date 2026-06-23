@@ -1,8 +1,13 @@
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
 import Loader from "../components/Loader";
+import API from "../api/axios";
 
 import "../styles/Home.css";
 
@@ -21,95 +26,16 @@ function Home() {
   const [genre, setGenre] =
     useState("All");
 
-  // ====================
-  // MOVIES
-  // ====================
-
-  const fetchMovies = async () => {
-
-    try {
-
-      setLoading(true);
-
-      const response = await fetch(
-        `http://127.0.0.1:8000/movies/search?title=${search}`
-      );
-
-      const data = await response.json();
-
-      const movieArray = data.Search
-        ? await Promise.all(
-
-            data.Search.map(
-              async (movie) => {
-
-                const detailsResponse =
-                  await fetch(
-                    `http://127.0.0.1:8000/movies/${movie.imdbID}`
-                  );
-
-                const details =
-                  await detailsResponse.json();
-
-                return {
-
-                  id: movie.imdbID,
-
-                  title: movie.Title,
-
-                  poster:
-                    movie.Poster !== "N/A"
-                      ? movie.Poster
-                      : "https://via.placeholder.com/300x450",
-
-                  genre:
-                    details.Genre ||
-                    "Unknown",
-
-                  rating:
-                    details.imdbRating ||
-                    "N/A",
-
-                  story:
-                    details.Plot ||
-                    "No description available",
-                };
-              }
-            )
-
-          )
-        : [];
-
-      setMovies(movieArray);
-
-      fetchRecommendations();
-
-    } catch (error) {
-
-      console.log(error);
-
-    } finally {
-
-      setLoading(false);
-    }
-  };
-
-  // ====================
-  // RECOMMENDATIONS
-  // ====================
-
   const fetchRecommendations =
-    async () => {
+    useCallback(async () => {
 
       try {
 
         const response =
-          await fetch(
-            "http://127.0.0.1:8000/recommendations"
-          );
+          await API.get("/recommendations");
 
         const data =
-          await response.json();
+          response.data;
 
         setRecommended(
           data.recommended_movies || []
@@ -119,14 +45,75 @@ function Home() {
 
         console.log(error);
       }
-    };
+    }, []);
+
+  const fetchMovies =
+    useCallback(async () => {
+
+      try {
+
+        setLoading(true);
+
+        const response = await API.get(
+          `/movies/search?title=${encodeURIComponent(search)}`
+        );
+
+        const data = response.data;
+
+        const movieArray = data.Search
+          ? await Promise.all(
+              data.Search.map(
+                async (movie) => {
+
+                  const detailsResponse =
+                    await API.get(
+                      `/movies/${movie.imdbID}`
+                    );
+
+                  const details =
+                    detailsResponse.data;
+
+                  return {
+                    id: movie.imdbID,
+                    title: movie.Title,
+                    poster:
+                      movie.Poster !== "N/A"
+                        ? movie.Poster
+                        : "https://via.placeholder.com/300x450",
+                    genre:
+                      details.Genre ||
+                      "Unknown",
+                    rating:
+                      details.imdbRating ||
+                      "N/A",
+                    story:
+                      details.Plot ||
+                      "No description available",
+                  };
+                }
+              )
+            )
+          : [];
+
+        setMovies(movieArray);
+
+        fetchRecommendations();
+
+      } catch (error) {
+
+        console.log(error);
+
+      } finally {
+
+        setLoading(false);
+      }
+    }, [fetchRecommendations, search]);
 
   useEffect(() => {
 
     fetchMovies();
-    fetchRecommendations();
 
-  }, []);
+  }, [fetchMovies]);
 
   const filteredMovies =
     movies.filter((movie) => {
@@ -211,8 +198,6 @@ function Home() {
 
       </div>
 
-      {/* RECOMMENDATIONS */}
-
       <div
         style={{
           marginTop: "30px",
@@ -227,9 +212,7 @@ function Home() {
         {recommended.length === 0 ? (
 
           <p>
-            Start searching and
-            adding favorites to get
-            personalized recommendations.
+            Start searching and adding favorites to get personalized recommendations.
           </p>
 
         ) : (
@@ -239,9 +222,7 @@ function Home() {
             {recommended.map(
               (movie) => (
 
-                <div
-                  key={movie.id}
-                >
+                <div key={movie.id}>
 
                   <MovieCard
                     movie={movie}
@@ -249,10 +230,8 @@ function Home() {
 
                   <p
                     style={{
-                      textAlign:
-                        "center",
-                      marginTop:
-                        "5px",
+                      textAlign: "center",
+                      marginTop: "5px",
                     }}
                   >
                     {movie.reason}

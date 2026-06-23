@@ -1,9 +1,13 @@
 import {
+  useCallback,
   useEffect,
   useState,
 } from "react";
 
+import toast from "react-hot-toast";
+
 import Navbar from "../components/Navbar";
+import API from "../api/axios";
 
 import "../styles/Favorites.css";
 
@@ -12,32 +16,116 @@ function Favorites() {
   const [favorites, setFavorites] =
     useState([]);
 
+  const [removingId, setRemovingId] =
+    useState("");
+
+  const loadFavorites =
+    useCallback(async () => {
+
+      try {
+
+        const response =
+          await API.get("/favorites");
+
+        setFavorites(response.data);
+
+      } catch {
+
+        setFavorites([]);
+      }
+    }, []);
+
   useEffect(() => {
 
-    const data =
-      JSON.parse(
-        localStorage.getItem(
-          "favorites"
-        )
-      ) || [];
+    loadFavorites();
 
-    setFavorites(data);
+  }, [loadFavorites]);
 
-  }, []);
+  const removeMovie = async (id) => {
 
-  const removeMovie = (id) => {
+    try {
 
-    const updated =
-      favorites.filter(
-        (movie) =>
-          movie.id !== id
+      setRemovingId(id);
+
+      await API.delete(
+        `/favorites/${id}`
       );
 
-    setFavorites(updated);
+      setFavorites((currentFavorites) =>
+        currentFavorites.filter(
+          (movie) =>
+            movie.movie_id !== id &&
+            String(movie.id) !== String(id)
+        )
+      );
 
-    localStorage.setItem(
-      "favorites",
-      JSON.stringify(updated)
+      toast.success(
+        "Removed from Favorites"
+      );
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to remove favorite"
+      );
+
+      loadFavorites();
+
+    } finally {
+
+      setRemovingId("");
+    }
+  };
+
+  const getFavoriteId = (movie) =>
+    movie.movie_id || String(movie.id);
+
+  const getPoster = (movie) =>
+    movie.poster &&
+    movie.poster !== "N/A"
+      ? movie.poster
+      : "https://via.placeholder.com/300x450";
+
+  const getTitle = (movie) =>
+    movie.title || "Untitled Movie";
+
+  const renderFavoriteCard = (movie) => {
+
+    const favoriteId =
+      getFavoriteId(movie);
+
+    const isRemoving =
+      removingId === favoriteId;
+
+    return (
+      <div
+        key={favoriteId}
+        className="favorite-card"
+      >
+
+        <img
+          src={getPoster(movie)}
+          alt={getTitle(movie)}
+        />
+
+        <h2>
+          {getTitle(movie)}
+        </h2>
+
+        <button
+          type="button"
+          disabled={isRemoving}
+          onClick={() =>
+            removeMovie(favoriteId)
+          }
+        >
+          {isRemoving
+            ? "Removing..."
+            : "Remove"}
+        </button>
+
+      </div>
     );
   };
 
@@ -55,7 +143,7 @@ function Favorites() {
         <div className="empty-state">
 
           <h2>
-            ❤️ No Favorites Yet
+            No Favorites Yet
           </h2>
 
           <p>
@@ -68,41 +156,7 @@ function Favorites() {
 
         <div className="favorites-grid">
 
-          {favorites.map(
-            (movie) => (
-
-              <div
-                key={movie.id}
-                className="favorite-card"
-              >
-
-                <img
-                  src={movie.poster}
-                  alt={movie.title}
-                />
-
-                <h2>
-                  {movie.title}
-                </h2>
-
-                <p>
-                  {movie.genre}
-                </p>
-
-                <button
-                  onClick={() =>
-                    removeMovie(
-                      movie.id
-                    )
-                  }
-                >
-                  Remove
-                </button>
-
-              </div>
-
-            )
-          )}
+          {favorites.map(renderFavoriteCard)}
 
         </div>
 

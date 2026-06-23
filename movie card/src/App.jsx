@@ -9,11 +9,11 @@ import Register from "./pages/Register";
 import Favorites from "./pages/Favorites";
 import Watchlist from "./pages/Watchlist";
 import MovieDetails from "./pages/MovieDetails";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import Collections from "./pages/Collections";
 
 import ProtectedRoute from "./components/ProtectedRoute";
-import Collections from "./pages/Collections";
 
 import { Toaster } from "react-hot-toast";
 
@@ -88,9 +88,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route
           path="/collections"
-          element={<Collections />}
+          element={
+            <ProtectedRoute>
+              <Collections />
+            </ProtectedRoute>
+          }
         />
 
       </Routes>

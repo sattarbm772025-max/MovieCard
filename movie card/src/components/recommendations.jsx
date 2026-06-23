@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 import MovieCard from "./MovieCard";
 
 function Recommendations() {
@@ -9,9 +9,9 @@ function Recommendations() {
 
   useEffect(() => {
 
-    axios
+    API
       .get(
-        "http://127.0.0.1:8000/recommendations"
+        "/recommendations"
       )
       .then((res) =>
         setMovies(

@@ -15,14 +15,28 @@ function AuthProvider({
       localStorage.getItem("token")
     );
 
-  const login = (newToken) => {
+  const [isAdmin, setIsAdmin] =
+    useState(
+      localStorage.getItem("is_admin") === "true"
+    );
+
+  const login = (
+    newToken,
+    newIsAdmin = false
+  ) => {
 
     localStorage.setItem(
       "token",
       newToken
     );
 
+    localStorage.setItem(
+      "is_admin",
+      String(Boolean(newIsAdmin))
+    );
+
     setToken(newToken);
+    setIsAdmin(Boolean(newIsAdmin));
   };
 
   const logout = () => {
@@ -31,13 +45,23 @@ function AuthProvider({
       "token"
     );
 
+    localStorage.removeItem(
+      "user_id"
+    );
+
+    localStorage.removeItem(
+      "is_admin"
+    );
+
     setToken(null);
+    setIsAdmin(false);
   };
 
   return (
     <AuthContext.Provider
       value={{
         token,
+        isAdmin,
         login,
         logout,
       }}
