@@ -3,7 +3,7 @@ import axios from "axios";
 const API = axios.create({
   baseURL:
     import.meta.env.VITE_API_URL ||
-    https://moviecard-fr7a.onrender.com,
+    "https://moviecard-fr7a.onrender.com",
 });
 
 API.interceptors.request.use((req) => {
