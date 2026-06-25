@@ -14,6 +14,8 @@ from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
 from app.models.collection import Collection
 from app.models.collection_movie import CollectionMovie
+from app.models.review_like import ReviewLike
+from app.models.collection_follow import CollectionFollow
 
 from app.routes import (
     auth,
@@ -26,7 +28,11 @@ from app.routes import (
     watchlist,
     profile,
     admin,
-    collections
+    collections,
+    notifications,
+    review_likes,
+    collection_follows
+    
 )
 
 Base.metadata.create_all(bind=engine)
@@ -61,6 +67,9 @@ app.include_router(watchlist.router)
 app.include_router(profile.router)
 app.include_router(admin.router)
 app.include_router(collections.router)
+app.include_router(notifications.router)
+app.include_router(review_likes.router)
+app.include_router(collection_follows.router)
 
 
 @app.get("/")

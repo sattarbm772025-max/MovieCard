@@ -5,6 +5,7 @@ from app.database.connection import SessionLocal
 from app.services.recommendation_service import generate_recommendations
 from app.models.user import User
 from app.utils.dependencies import get_current_user
+from app.utils.notification_helper import create_notification
 router = APIRouter()
 
 def get_db():
@@ -22,6 +23,14 @@ def recommendations(
     movies = generate_recommendations(
         db=db,
         user_id=current_user.id
+    )
+
+    create_notification(
+        db,
+        current_user.id,
+        "Here are some movies you might like!"
+        "recommendation"
+        
     )
 
     return {
