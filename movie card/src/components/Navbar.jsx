@@ -106,6 +106,10 @@ function Navbar() {
               Collections
             </Link>
 
+            <Link to="/notifications">
+              🔔        
+            </Link>
+
             <Link to="/profile">
               Profile
             </Link>

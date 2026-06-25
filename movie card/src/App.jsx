@@ -12,6 +12,7 @@ import MovieDetails from "./pages/MovieDetails";
 import Profile from "./pages/profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import Collections from "./pages/Collections";
+import Notifications from "./pages/Notifications";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -97,6 +98,12 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/notifications"
+          element={<Notifications />}
+        />
+
+
 
       </Routes>
     </>
