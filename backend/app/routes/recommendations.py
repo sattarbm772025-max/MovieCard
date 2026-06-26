@@ -28,9 +28,8 @@ def recommendations(
     create_notification(
         db,
         current_user.id,
-        "Here are some movies you might like!"
-        "recommendation"
-        
+        message= "Here are some movies you might like!",
+        notification_type= "recommendation"
     )
 
     return {
