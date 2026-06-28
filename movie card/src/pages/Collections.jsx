@@ -3,40 +3,9 @@ import toast from "react-hot-toast";
 
 import API from "../api/axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-const buttonStyle = {
-  padding: "10px 14px",
-  borderRadius: "8px",
-  border: "none",
-  cursor: "pointer",
-  fontWeight: "600",
-  transition: "all 0.2s ease",
-};
-
-const primaryBtn = {
-  ...buttonStyle,
-  background: "#3b82f6",
-  color: "white",
-};
-
-const dangerBtn = {
-  ...buttonStyle,
-  background: "#ef4444",
-  color: "white",
-};
-
-const successBtn = {
-  ...buttonStyle,
-  background: "#22c55e",
-  color: "white",
-};
-
-const ghostBtn = {
-  ...buttonStyle,
-  background: "transparent",
-  color: "white",
-  border: "1px solid #475569",
-};
+import "../styles/Collections.css";
 
 function Collections() {
 
@@ -72,39 +41,49 @@ function Collections() {
 
   const loadCollections = async () => {
 
-    const response =
-      await API.get("/collections");
+    try {
 
-    setCollections(response.data);
+      const response =
+        await API.get("/collections");
 
-    const movieEntries =
-      await Promise.all(
-        response.data.map(
-          async (collection) => {
+      setCollections(response.data);
 
-            const movieResponse =
-              await API.get(
-                `/collections/${collection.id}/movies`
-              );
+      const movieEntries =
+        await Promise.all(
+          response.data.map(
+            async (collection) => {
 
-            return [
-              collection.id,
-              movieResponse.data,
-            ];
-          }
-        )
+              const movieResponse =
+                await API.get(
+                  `/collections/${collection.id}/movies`
+                );
+
+              return [
+                collection.id,
+                movieResponse.data,
+              ];
+            }
+          )
+        );
+
+      setMovies(
+        Object.fromEntries(movieEntries)
       );
 
-    setMovies(
-      Object.fromEntries(movieEntries)
-    );
+      const discoverResponse =
+        await API.get("/collections/discover");
 
-    const discoverResponse =
-      await API.get("/collections/discover");
+      setDiscoverCollections(
+        discoverResponse.data
+      );
 
-    setDiscoverCollections(
-      discoverResponse.data
-    );
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to load collections"
+      );
+    }
   };
 
   useEffect(() => {
@@ -116,54 +95,87 @@ function Collections() {
   const createCollection = async () => {
 
     if (!name.trim()) {
-      alert("Enter collection name");
+      toast.error("Enter collection name");
       return;
     }
 
-    await API.post(
-      "/collections",
-      {
-        name,
-        description,
-      }
-    );
+    try {
 
-    setName("");
-    setDescription("");
-    loadCollections();
+      await API.post(
+        "/collections",
+        {
+          name,
+          description,
+        }
+      );
+
+      setName("");
+      setDescription("");
+      toast.success("Collection created");
+      loadCollections();
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to create collection"
+      );
+    }
   };
 
   const deleteCollection = async (id) => {
 
-    await API.delete(
-      `/collections/${id}`
-    );
+    try {
 
-    loadCollections();
+      await API.delete(
+        `/collections/${id}`
+      );
+
+      toast.success("Collection deleted");
+      loadCollections();
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to delete collection"
+      );
+    }
   };
 
   const addMovie = async (collectionId) => {
 
     if (!movieId) {
-      alert("Select a movie");
+      toast.error("Select a movie");
       return;
     }
 
-    await API.post(
-      `/collections/${collectionId}/movies`,
-      {
-        movie_id: movieId,
-        title: movieTitle,
-        poster: "",
-        genre: "",
-      }
-    );
+    try {
 
-    setMovieId("");
-    setMovieTitle("");
-    setSearch("");
-    setSearchResults([]);
-    loadCollections();
+      await API.post(
+        `/collections/${collectionId}/movies`,
+        {
+          movie_id: movieId,
+          title: movieTitle,
+          poster: "",
+          genre: "",
+        }
+      );
+
+      setMovieId("");
+      setMovieTitle("");
+      setSearch("");
+      setSearchResults([]);
+      toast.success("Movie added");
+      loadCollections();
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to add movie"
+      );
+    }
   };
 
   const removeMovie = async (
@@ -171,11 +183,22 @@ function Collections() {
     selectedMovieId
   ) => {
 
-    await API.delete(
-      `/collections/${collectionId}/movies/${selectedMovieId}`
-    );
+    try {
 
-    loadCollections();
+      await API.delete(
+        `/collections/${collectionId}/movies/${selectedMovieId}`
+      );
+
+      toast.success("Movie removed");
+      loadCollections();
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to remove movie"
+      );
+    }
   };
 
   const followCollection = async (collectionId) => {
@@ -206,194 +229,159 @@ function Collections() {
       return;
     }
 
-    const response =
-      await API.get(
-        `/movies/search?title=${encodeURIComponent(title)}`
+    try {
+
+      const response =
+        await API.get(
+          `/movies/search?title=${encodeURIComponent(title)}`
+        );
+
+      setSearchResults(
+        response.data.Search || []
       );
 
-    setSearchResults(
-      response.data.Search || []
-    );
+    } catch {
+
+      setSearchResults([]);
+    }
   };
 
   return (
-    <div
-      style={{
-        background: "#0f172a",
-        minHeight: "100vh",
-        color: "white",
-      }}
-    >
+    <div className="collections-page page-shell">
       <Navbar />
 
-      <div
-        style={{
-          maxWidth: "1000px",
-          margin: "0 auto",
-          padding: "20px",
-        }}
-      >
+      <main className="collections-inner">
+        <header className="collections-header">
+          <div>
+            <h1 className="page-title">
+              Movie Collections
+            </h1>
 
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "20px",
-          }}
-        >
-          Movie Collections
-        </h1>
-
-        <div
-          style={{
-            background: "#1e293b",
-            padding: "14px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Collection Name"
-            value={name}
-            onChange={(event) =>
-              setName(event.target.value)
-            }
-            style={{
-              width: "98%",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          />
-
-          <input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(event) =>
-              setDescription(event.target.value)
-            }
-            style={{
-              width: "98%",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          />
-
-          <button
-            style={primaryBtn}
-            onClick={createCollection}
-          >
-            Create Collection
-          </button>
-        </div>
-
-        {collections.map((collection) => (
-          <div
-            key={collection.id}
-            style={{
-              background: "#1e293b",
-              padding: "14px",
-              borderRadius: "8px",
-              marginBottom: "16px",
-              border: "1px solid #334155",
-            }}
-          >
-            <h2 style={{ marginBottom: "4px" }}>
-              {collection.name}
-            </h2>
-
-            <p
-              style={{
-                opacity: 0.7,
-                fontSize: "13px",
-              }}
-            >
-              {collection.description}
+            <p className="page-subtitle">
+              Build curated movie groups, add titles, and follow public collections.
             </p>
+          </div>
+        </header>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                marginTop: "10px",
-              }}
+        <section className="collections-panel glass-panel">
+          <h2>Create Collection</h2>
+
+          <div className="collections-form">
+            <input
+              className="collections-input"
+              type="text"
+              placeholder="Collection name"
+              value={name}
+              onChange={(event) =>
+                setName(event.target.value)
+              }
+            />
+
+            <input
+              className="collections-input"
+              type="text"
+              placeholder="Description"
+              value={description}
+              onChange={(event) =>
+                setDescription(event.target.value)
+              }
+            />
+
+            <button
+              className="primary-action"
+              onClick={createCollection}
             >
-              <button
-                style={dangerBtn}
-                onClick={() =>
-                  deleteCollection(collection.id)
-                }
-              >
-                Delete
-              </button>
+              Create Collection
+            </button>
+          </div>
+        </section>
 
-              <button
-                style={ghostBtn}
-                onClick={() =>
-                  setOpenCollectionId(
-                    openCollectionId === collection.id
-                      ? null
-                      : collection.id
-                  )
-                }
-              >
-                {openCollectionId === collection.id
-                  ? "Hide"
-                  : "Add Movie"}
-              </button>
-            </div>
+        <section className="collections-grid">
+          {collections.map((collection) => (
+            <article
+              key={collection.id}
+              className="collection-card glass-panel"
+            >
+              <div className="collection-card-top">
+                <div>
+                  <h2>
+                    {collection.name}
+                  </h2>
 
-            {openCollectionId === collection.id && (
-              <div style={{ marginTop: "10px" }}>
-                <input
-                  type="text"
-                  placeholder="Search Movie"
-                  value={search}
-                  onChange={(event) => {
-                    const value =
-                      event.target.value;
-
-                    setSearch(value);
-                    searchMovies(value);
-                  }}
-                  style={{
-                    width: "98%",
-                    padding: "10px",
-                    marginBottom: "10px",
-                  }}
-                />
-
-                <div
-                  style={{
-                    background: "white",
-                    color: "black",
-                    borderRadius: "8px",
-                    maxHeight: "150px",
-                    overflowY: "auto",
-                  }}
-                >
-                  {searchResults.map((movie) => (
-                    <div
-                      key={movie.imdbID}
-                      style={{
-                        padding: "8px",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setMovieId(movie.imdbID);
-                        setMovieTitle(movie.Title);
-                        setSearch(movie.Title);
-                        setSearchResults([]);
-                      }}
-                    >
-                      {movie.Title}
-                    </div>
-                  ))}
+                  <p>
+                    {collection.description ||
+                      "No description added yet."}
+                  </p>
                 </div>
 
-                <div style={{ marginTop: "10px" }}>
+                <span className="collection-count">
+                  {movies[collection.id]?.length || 0} Movies
+                </span>
+              </div>
+
+              <div className="collection-actions">
+                <button
+                  className="danger-action"
+                  onClick={() =>
+                    deleteCollection(collection.id)
+                  }
+                >
+                  Delete
+                </button>
+
+                <button
+                  className="ghost-action"
+                  onClick={() =>
+                    setOpenCollectionId(
+                      openCollectionId === collection.id
+                        ? null
+                        : collection.id
+                    )
+                  }
+                >
+                  {openCollectionId === collection.id
+                    ? "Hide"
+                    : "Add Movie"}
+                </button>
+              </div>
+
+              {openCollectionId === collection.id && (
+                <div className="collection-search">
+                  <input
+                    className="collections-input"
+                    type="text"
+                    placeholder="Search movie"
+                    value={search}
+                    onChange={(event) => {
+                      const value =
+                        event.target.value;
+
+                      setSearch(value);
+                      searchMovies(value);
+                    }}
+                  />
+
+                  {searchResults.length > 0 && (
+                    <div className="collection-search-results">
+                      {searchResults.map((movie) => (
+                        <button
+                          key={movie.imdbID}
+                          type="button"
+                          onClick={() => {
+                            setMovieId(movie.imdbID);
+                            setMovieTitle(movie.Title);
+                            setSearch(movie.Title);
+                            setSearchResults([]);
+                          }}
+                        >
+                          {movie.Title}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   <button
-                    style={successBtn}
+                    className="success-action"
                     onClick={() =>
                       addMovie(collection.id)
                     }
@@ -401,113 +389,88 @@ function Collections() {
                     Add Movie
                   </button>
                 </div>
+              )}
+
+              <div className="collection-movies">
+                <h3>Movies</h3>
+
+                {movies[collection.id]?.length ? (
+                  movies[collection.id].map((movie) => (
+                    <div
+                      key={movie.id}
+                      className="collection-movie"
+                    >
+                      <span>{movie.title}</span>
+
+                      <button
+                        className="ghost-action"
+                        onClick={() =>
+                          removeMovie(
+                            collection.id,
+                            movie.movie_id
+                          )
+                        }
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p className="collection-empty">
+                    No movies in this collection yet.
+                  </p>
+                )}
               </div>
-            )}
+            </article>
+          ))}
+        </section>
 
-            <div style={{ marginTop: "12px" }}>
-              <h4>Movies</h4>
-
-              {movies[collection.id]?.map((movie) => (
-                <div
-                  key={movie.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    fontSize: "14px",
-                    marginBottom: "6px",
-                  }}
-                >
-                  <span>{movie.title}</span>
-
-                  <button
-                    style={ghostBtn}
-                    onClick={() =>
-                      removeMovie(
-                        collection.id,
-                        movie.movie_id
-                      )
-                    }
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        <div
-          style={{
-            background: "#1e293b",
-            padding: "14px",
-            borderRadius: "8px",
-            marginTop: "24px",
-            border: "1px solid #334155",
-          }}
-        >
-          <h2>
-            Discover Collections
-          </h2>
+        <section className="collections-panel glass-panel">
+          <h2>Discover Collections</h2>
 
           {discoverCollections.length === 0 ? (
 
-            <p
-              style={{
-                opacity: 0.75,
-              }}
-            >
+            <p className="collection-empty">
               No public collections from other users yet.
             </p>
 
           ) : (
 
-            discoverCollections.map((collection) => (
-              <div
-                key={collection.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: "12px",
-                  borderTop: "1px solid #334155",
-                  paddingTop: "12px",
-                  marginTop: "12px",
-                }}
-              >
-                <div>
-                  <h3
-                    style={{
-                      margin: "0 0 4px",
-                    }}
-                  >
-                    {collection.name}
-                  </h3>
-
-                  <p
-                    style={{
-                      margin: 0,
-                      opacity: 0.7,
-                    }}
-                  >
-                    {collection.description}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  style={successBtn}
-                  onClick={() =>
-                    followCollection(collection.id)
-                  }
+            <div className="discover-list">
+              {discoverCollections.map((collection) => (
+                <article
+                  key={collection.id}
+                  className="discover-card"
                 >
-                  Follow
-                </button>
-              </div>
-            ))
+                  <div>
+                    <h3>
+                      {collection.name}
+                    </h3>
+
+                    <p>
+                      {collection.description ||
+                        "No description added yet."}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="success-action"
+                    onClick={() =>
+                      followCollection(collection.id)
+                    }
+                  >
+                    Follow
+                  </button>
+                </article>
+              ))}
+            </div>
 
           )}
-        </div>
-      </div>
+        </section>
+      </main>
+
+      <Footer />
     </div>
   );
 }

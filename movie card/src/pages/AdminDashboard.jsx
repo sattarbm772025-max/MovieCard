@@ -48,9 +48,40 @@ function AdminDashboard() {
           API.get("/admin/reviews"),
         ]);
 
+        const reviewsWithMovieNames =
+          await Promise.all(
+            reviewsRes.data.map(
+              async (review) => {
+
+                try {
+
+                  const movieRes =
+                    await API.get(
+                      `/movies/${review.movie_id}`
+                    );
+
+                  return {
+                    ...review,
+                    movie_title:
+                      movieRes.data.Title ||
+                      review.movie_id,
+                  };
+
+                } catch {
+
+                  return {
+                    ...review,
+                    movie_title:
+                      review.movie_id,
+                  };
+                }
+              }
+            )
+          );
+
         setStats(statsRes.data);
         setUsers(usersRes.data);
-        setReviews(reviewsRes.data);
+        setReviews(reviewsWithMovieNames);
 
       } catch (err) {
 
@@ -208,7 +239,15 @@ function AdminDashboard() {
               {reviews.map((review) => (
                 <tr key={review.id}>
                   <td>{review.id}</td>
-                  <td>{review.movie_id}</td>
+                  <td>
+                    <strong>
+                      {review.movie_title ||
+                        review.movie_id}
+                    </strong>
+                    <small className="muted-id">
+                      {review.movie_id}
+                    </small>
+                  </td>
                   <td>{review.review}</td>
                   <td>
                     <button

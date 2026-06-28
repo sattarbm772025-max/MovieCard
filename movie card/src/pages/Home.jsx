@@ -195,40 +195,6 @@ function Home() {
 
       <Navbar />
 
-      <section className="home-hero">
-        <div className="home-hero-content">
-          <span className="home-kicker">
-            Recommended For You
-          </span>
-
-          <h1>
-            Discover Movies
-            <br />
-            Worth Watching
-          </h1>
-
-          <p>
-            Search movies, save favorites, build watchlists, write reviews, follow collections, and get recommendations based on your activity.
-          </p>
-
-          <div className="hero-buttons">
-            <button
-              className="hero-primary"
-              onClick={handleSearch}
-            >
-              Search Now
-            </button>
-
-            <button
-              className="hero-secondary"
-              onClick={fetchRecommendations}
-            >
-              Refresh Picks
-            </button>
-          </div>
-        </div>
-      </section>
-
       <main className="home-container">
         <div className="search-section">
           <div className="search-box">

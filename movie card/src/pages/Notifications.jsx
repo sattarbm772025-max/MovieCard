@@ -8,6 +8,9 @@ import toast from "react-hot-toast";
 
 import API from "../api/axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+
+import "../styles/Notifications.css";
 
 function Notifications() {
 
@@ -75,103 +78,76 @@ function Notifications() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#0f172a",
-        color: "white",
-      }}
-    >
-
+    <div className="notifications-page page-shell">
       <Navbar />
 
-      <main
-        style={{
-          maxWidth: "800px",
-          margin: "0 auto",
-          padding: "24px",
-        }}
-      >
+      <main className="notifications-inner">
+        <header className="notifications-header">
+          <div>
+            <h1 className="page-title">
+              Alerts
+            </h1>
 
-        <h1>
-          Notifications
-        </h1>
+            <p className="page-subtitle">
+              Review likes, collection follows, and new recommendations appear here.
+            </p>
+          </div>
+        </header>
 
         {loading ? (
 
-          <p>Loading...</p>
+          <div className="notification-empty glass-panel">
+            Loading alerts...
+          </div>
 
         ) : notifications.length === 0 ? (
 
-          <p>No notifications yet.</p>
+          <div className="notification-empty glass-panel">
+            <h2>No alerts yet</h2>
+            <p>Your activity updates will show here.</p>
+          </div>
 
         ) : (
 
-          notifications.map((item) => (
+          <div className="notification-list">
+            {notifications.map((item) => (
+              <article
+                key={item.id}
+                className={`notification-card glass-panel ${
+                  item.is_read ? "" : "unread"
+                }`}
+              >
+                <div className="notification-dot" />
 
-            <div
-              key={item.id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "16px",
-                background: item.is_read
-                  ? "#1e293b"
-                  : "#243b63",
-                border: "1px solid #334155",
-                borderRadius: "8px",
-                padding: "14px",
-                marginTop: "12px",
-              }}
-            >
-              <div>
-                <p
-                  style={{
-                    margin: 0,
-                    fontWeight: item.is_read
-                      ? "400"
-                      : "700",
-                  }}
-                >
-                  {item.message}
-                </p>
+                <div className="notification-copy">
+                  <h2>
+                    {item.message}
+                  </h2>
 
-                <small
-                  style={{
-                    color: "#cbd5e1",
-                  }}
-                >
-                  {item.type}
-                </small>
-              </div>
+                  <p>
+                    {item.type}
+                  </p>
+                </div>
 
-              {!item.is_read && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    markAsRead(item.id)
-                  }
-                  style={{
-                    background: "#ffd60a",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 12px",
-                    fontWeight: "700",
-                    cursor: "pointer",
-                  }}
-                >
-                  Mark read
-                </button>
-              )}
-            </div>
-
-          ))
+                {!item.is_read && (
+                  <button
+                    type="button"
+                    className="primary-action"
+                    onClick={() =>
+                      markAsRead(item.id)
+                    }
+                  >
+                    Mark read
+                  </button>
+                )}
+              </article>
+            ))}
+          </div>
 
         )}
-
       </main>
 
+      <Footer />
     </div>
   );
 }

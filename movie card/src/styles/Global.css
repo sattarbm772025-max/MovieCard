@@ -142,6 +142,13 @@ a {
   text-align: left;
 }
 
+.muted-id {
+  display: block;
+  margin-top: 4px;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
 .data-table th {
   color: #ffd60a;
   font-size: 13px;

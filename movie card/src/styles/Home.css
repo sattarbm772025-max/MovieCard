@@ -87,7 +87,7 @@
 }
 
 .search-section {
-  margin: -24px auto 52px;
+  margin: 32px auto 52px;
   display: flex;
   justify-content: center;
   gap: 14px;
@@ -228,7 +228,7 @@ body.light-mode .genre-box select {
   }
 
   .search-section {
-    margin-top: -44px;
+    margin-top: 24px;
   }
 
   .search-box,

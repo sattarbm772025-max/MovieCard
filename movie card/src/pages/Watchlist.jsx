@@ -44,10 +44,6 @@ function Watchlist() {
       <main className="page-inner">
         <header className="watchlist-top">
           <div>
-            <p className="home-kicker">
-              Saved for later
-            </p>
-
             <h1 className="page-title">
               Watchlist
             </h1>
