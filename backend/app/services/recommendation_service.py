@@ -1,9 +1,12 @@
 import os
 import requests
+from dotenv import load_dotenv
 
 from app.models.favorite import Favorite
 from app.models.search_history import SearchHistory
 from app.models.viewed_movie import ViewedMovie
+
+load_dotenv()
 
 OMDB_API_KEY = os.getenv("OMDB_API_KEY")
 
@@ -71,6 +74,14 @@ def generate_recommendations(db, user_id):
                 )
             )
 
+    if not keywords:
+
+        keywords = [
+            ("batman", "Popular movie pick"),
+            ("avengers", "Popular movie pick"),
+            ("spider man", "Popular movie pick")
+        ]
+
     for keyword, reason in keywords:
 
         try:
@@ -81,7 +92,10 @@ def generate_recommendations(db, user_id):
                 f"&s={keyword}"
             )
 
-            response = requests.get(search_url)
+            response = requests.get(
+                search_url,
+                timeout=10
+            )
             data = response.json()
 
             if "Search" not in data:
@@ -101,7 +115,8 @@ def generate_recommendations(db, user_id):
                 )
 
                 details = requests.get(
-                    details_url
+                    details_url,
+                    timeout=10
                 ).json()
 
                 # Skip incomplete movies

@@ -70,6 +70,19 @@ def get_collections(
     )
 
 
+@router.get("/collections/discover")
+def discover_collections(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+
+    return (
+        db.query(Collection)
+        .filter(Collection.user_id != current_user.id)
+        .all()
+    )
+
+
 @router.put("/collections/{collection_id}")
 def update_collection(
     collection_id: int,

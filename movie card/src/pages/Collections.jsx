@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 import API from "../api/axios";
 import Navbar from "../components/Navbar";
@@ -41,20 +42,31 @@ function Collections() {
 
   const [collections, setCollections] =
     useState([]);
+
+  const [discoverCollections, setDiscoverCollections] =
+    useState([]);
+
   const [movies, setMovies] =
     useState({});
+
   const [name, setName] =
     useState("");
+
   const [description, setDescription] =
     useState("");
+
   const [movieId, setMovieId] =
     useState("");
+
   const [movieTitle, setMovieTitle] =
     useState("");
+
   const [search, setSearch] =
     useState("");
+
   const [searchResults, setSearchResults] =
     useState([]);
+
   const [openCollectionId, setOpenCollectionId] =
     useState(null);
 
@@ -85,6 +97,13 @@ function Collections() {
 
     setMovies(
       Object.fromEntries(movieEntries)
+    );
+
+    const discoverResponse =
+      await API.get("/collections/discover");
+
+    setDiscoverCollections(
+      discoverResponse.data
     );
   };
 
@@ -159,6 +178,27 @@ function Collections() {
     loadCollections();
   };
 
+  const followCollection = async (collectionId) => {
+
+    try {
+
+      await API.post(
+        `/collections/${collectionId}/follow`
+      );
+
+      toast.success(
+        "Collection followed"
+      );
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to follow collection"
+      );
+    }
+  };
+
   const searchMovies = async (title) => {
 
     if (!title.trim()) {
@@ -200,7 +240,7 @@ function Collections() {
             marginBottom: "20px",
           }}
         >
-          🎞️ Movie Collections
+          Movie Collections
         </h1>
 
         <div
@@ -358,7 +398,7 @@ function Collections() {
                       addMovie(collection.id)
                     }
                   >
-                    Add Movie 🎬
+                    Add Movie
                   </button>
                 </div>
               </div>
@@ -377,7 +417,7 @@ function Collections() {
                     marginBottom: "6px",
                   }}
                 >
-                  <span>🎬 {movie.title} 🍿</span>
+                  <span>{movie.title}</span>
 
                   <button
                     style={ghostBtn}
@@ -395,6 +435,78 @@ function Collections() {
             </div>
           </div>
         ))}
+
+        <div
+          style={{
+            background: "#1e293b",
+            padding: "14px",
+            borderRadius: "8px",
+            marginTop: "24px",
+            border: "1px solid #334155",
+          }}
+        >
+          <h2>
+            Discover Collections
+          </h2>
+
+          {discoverCollections.length === 0 ? (
+
+            <p
+              style={{
+                opacity: 0.75,
+              }}
+            >
+              No public collections from other users yet.
+            </p>
+
+          ) : (
+
+            discoverCollections.map((collection) => (
+              <div
+                key={collection.id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: "12px",
+                  borderTop: "1px solid #334155",
+                  paddingTop: "12px",
+                  marginTop: "12px",
+                }}
+              >
+                <div>
+                  <h3
+                    style={{
+                      margin: "0 0 4px",
+                    }}
+                  >
+                    {collection.name}
+                  </h3>
+
+                  <p
+                    style={{
+                      margin: 0,
+                      opacity: 0.7,
+                    }}
+                  >
+                    {collection.description}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  style={successBtn}
+                  onClick={() =>
+                    followCollection(collection.id)
+                  }
+                >
+                  Follow
+                </button>
+              </div>
+            ))
+
+          )}
+        </div>
       </div>
     </div>
   );

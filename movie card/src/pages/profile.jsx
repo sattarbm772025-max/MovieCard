@@ -1,7 +1,13 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import toast from "react-hot-toast";
 
 import API from "../api/axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function Profile() {
 
@@ -31,9 +37,7 @@ function Profile() {
         profile
       );
 
-      alert(
-        "Profile Updated"
-      );
+      toast.success("Profile updated");
     };
 
   const changePassword =
@@ -47,87 +51,95 @@ function Profile() {
         }
       );
 
-      alert(
-        "Password Changed"
-      );
-
+      toast.success("Password changed");
       setPassword("");
     };
 
   return (
-
-    <>
+    <div className="page-shell">
       <Navbar />
 
-      <div
-        style={{
-          maxWidth: "500px",
-          margin: "30px auto",
-        }}
-      >
+      <main className="page-inner">
+        <h1 className="page-title">
+          Account Profile
+        </h1>
 
-        <h2>
-          User Profile
-        </h2>
+        <p className="page-subtitle">
+          Manage your identity and password for the movie dashboard.
+        </p>
 
-        <input
-          type="text"
-          value={profile.username}
-          onChange={(event) =>
-            setProfile({
-              ...profile,
-              username:
-                event.target.value,
-            })
-          }
-        />
+        <div className="profile-grid">
+          <section className="glass-panel form-grid">
+            <div style={{ padding: "24px" }}>
+              <h2>Profile Details</h2>
 
-        <input
-          type="email"
-          value={profile.email}
-          onChange={(event) =>
-            setProfile({
-              ...profile,
-              email:
-                event.target.value,
-            })
-          }
-        />
+              <div className="form-grid">
+                <input
+                  type="text"
+                  value={profile.username}
+                  placeholder="Username"
+                  onChange={(event) =>
+                    setProfile({
+                      ...profile,
+                      username:
+                        event.target.value,
+                    })
+                  }
+                />
 
-        <button
-          onClick={
-            updateProfile
-          }
-        >
-          Update Profile
-        </button>
+                <input
+                  type="email"
+                  value={profile.email}
+                  placeholder="Email"
+                  onChange={(event) =>
+                    setProfile({
+                      ...profile,
+                      email:
+                        event.target.value,
+                    })
+                  }
+                />
 
-        <hr />
+                <button
+                  className="primary-action"
+                  onClick={updateProfile}
+                >
+                  Update Profile
+                </button>
+              </div>
+            </div>
+          </section>
 
-        <h3>
-          Change Password
-        </h3>
+          <section className="glass-panel form-grid">
+            <div style={{ padding: "24px" }}>
+              <h2>Change Password</h2>
 
-        <input
-          type="password"
-          value={password}
-          onChange={(event) =>
-            setPassword(
-              event.target.value
-            )
-          }
-        />
+              <div className="form-grid">
+                <input
+                  type="password"
+                  value={password}
+                  placeholder="New password"
+                  onChange={(event) =>
+                    setPassword(
+                      event.target.value
+                    )
+                  }
+                />
 
-        <button
-          onClick={
-            changePassword
-          }
-        >
-          Change Password
-        </button>
+                <button
+                  className="primary-action"
+                  onClick={changePassword}
+                >
+                  Change Password
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
 
-      </div>
-    </>
+      <Footer />
+    </div>
   );
 }
 

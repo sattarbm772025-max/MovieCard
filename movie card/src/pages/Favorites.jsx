@@ -7,6 +7,7 @@ import {
 import toast from "react-hot-toast";
 
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import API from "../api/axios";
 
 import "../styles/Favorites.css";
@@ -59,9 +60,7 @@ function Favorites() {
         )
       );
 
-      toast.success(
-        "Removed from Favorites"
-      );
+      toast.success("Removed from Favorites");
 
     } catch (error) {
 
@@ -90,78 +89,74 @@ function Favorites() {
   const getTitle = (movie) =>
     movie.title || "Untitled Movie";
 
-  const renderFavoriteCard = (movie) => {
-
-    const favoriteId =
-      getFavoriteId(movie);
-
-    const isRemoving =
-      removingId === favoriteId;
-
-    return (
-      <div
-        key={favoriteId}
-        className="favorite-card"
-      >
-
-        <img
-          src={getPoster(movie)}
-          alt={getTitle(movie)}
-        />
-
-        <h2>
-          {getTitle(movie)}
-        </h2>
-
-        <button
-          type="button"
-          disabled={isRemoving}
-          onClick={() =>
-            removeMovie(favoriteId)
-          }
-        >
-          {isRemoving
-            ? "Removing..."
-            : "Remove"}
-        </button>
-
-      </div>
-    );
-  };
-
   return (
     <div className="favorites-page">
 
       <Navbar />
 
-      <h1 className="favorites-title">
-        ❤️ Favorite Movies
-      </h1>
+      <header className="favorites-header">
+        <div>
+          <h1 className="favorites-title">
+            Favorite Movies
+          </h1>
+
+          <p>
+            Your saved posters, ready for a rewatch.
+          </p>
+        </div>
+      </header>
 
       {favorites.length === 0 ? (
 
         <div className="empty-state">
-
-          <h2>
-            No Favorites Yet
-          </h2>
-
-          <p>
-            Add movies from Home page
-          </p>
-
+          <h2>No Favorites Yet</h2>
+          <p>Add movies from Home page</p>
         </div>
 
       ) : (
 
         <div className="favorites-grid">
+          {favorites.map((movie) => {
 
-          {favorites.map(renderFavoriteCard)}
+            const favoriteId =
+              getFavoriteId(movie);
 
+            const isRemoving =
+              removingId === favoriteId;
+
+            return (
+              <div
+                key={favoriteId}
+                className="favorite-card"
+              >
+                <img
+                  src={getPoster(movie)}
+                  alt={getTitle(movie)}
+                />
+
+                <h2>
+                  {getTitle(movie)}
+                </h2>
+
+                <button
+                  type="button"
+                  disabled={isRemoving}
+                  onClick={() =>
+                    removeMovie(favoriteId)
+                  }
+                >
+                  {isRemoving
+                    ? "Removing..."
+                    : "Remove"}
+                </button>
+              </div>
+            );
+          })}
         </div>
 
       )}
 
+      <Footer />
     </div>
   );
 }

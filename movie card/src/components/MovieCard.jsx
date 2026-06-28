@@ -135,17 +135,19 @@ function MovieCard({ movie }) {
 
       <div className="movie-content">
 
+        <div className="movie-meta-row">
+          <span className="movie-rating">
+            IMDb {movie.rating}
+          </span>
+
+          <span className="movie-chip">
+            {movie.genre || "Movie"}
+          </span>
+        </div>
+
         <h2 className="movie-title">
           {movie.title}
         </h2>
-
-        <p className="movie-genre">
-          Genre: {movie.genre}
-        </p>
-
-        <div className="movie-rating">
-          Rating: {movie.rating}
-        </div>
 
         <p className="movie-story">
           {movie.story ||

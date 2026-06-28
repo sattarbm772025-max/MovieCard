@@ -8,6 +8,9 @@ def create_notification(
     notification_type
 ):
 
+    if not user_id:
+        return None
+
     notification = Notification(
         user_id=user_id,
         message=message,
@@ -16,4 +19,4 @@ def create_notification(
 
     db.add(notification)
 
-    db.commit()
+    return notification

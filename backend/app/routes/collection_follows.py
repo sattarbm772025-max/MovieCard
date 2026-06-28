@@ -51,6 +51,13 @@ def follow_collection(
             detail="Collection not found"
         )
 
+    if collection.user_id == current_user.id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="You cannot follow your own collection"
+        )
+
     existing_follow = (
         db.query(CollectionFollow)
         .filter(

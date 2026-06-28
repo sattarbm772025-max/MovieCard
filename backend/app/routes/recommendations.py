@@ -28,9 +28,11 @@ def recommendations(
     create_notification(
         db,
         current_user.id,
-        message= "Here are some movies you might like!",
-        notification_type= "recommendation"
+        message="New recommendations are ready for you",
+        notification_type="recommendation"
     )
+
+    db.commit()
 
     return {
         "recommended_movies": movies

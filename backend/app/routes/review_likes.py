@@ -51,6 +51,13 @@ def like_review(
             detail="Review not found"
         )
 
+    if review.user_id == current_user.id:
+
+        raise HTTPException(
+            status_code=400,
+            detail="You cannot like your own review"
+        )
+
     existing_like = (
         db.query(ReviewLike)
         .filter(

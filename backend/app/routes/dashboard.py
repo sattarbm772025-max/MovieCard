@@ -5,6 +5,8 @@ from app.database.connection import SessionLocal
 
 from app.models.favorite import Favorite
 from app.models.search_history import SearchHistory
+from app.models.user import User
+from app.utils.dependencies import get_current_user
 
 router = APIRouter()
 
@@ -22,15 +24,14 @@ def get_db():
 
 @router.get("/dashboard")
 def dashboard(
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-
-    user_id = 1
 
     total_favorites = (
         db.query(Favorite)
         .filter(
-            Favorite.user_id == user_id
+            Favorite.user_id == current_user.id
         )
         .count()
     )
@@ -38,7 +39,7 @@ def dashboard(
     total_searches = (
         db.query(SearchHistory)
         .filter(
-            SearchHistory.user_id == user_id
+            SearchHistory.user_id == current_user.id
         )
         .count()
     )
@@ -46,7 +47,7 @@ def dashboard(
     recent_searches = (
         db.query(SearchHistory)
         .filter(
-            SearchHistory.user_id == user_id
+            SearchHistory.user_id == current_user.id
         )
         .order_by(
             SearchHistory.searched_at.desc()

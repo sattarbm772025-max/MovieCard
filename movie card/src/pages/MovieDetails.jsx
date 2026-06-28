@@ -5,6 +5,7 @@ import {
 } from "react";
 
 import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 import API from "../api/axios";
 import Navbar from "../components/Navbar";
@@ -119,6 +120,25 @@ function MovieDetails() {
         );
       }
     };
+
+  const likeReview = async (reviewId) => {
+
+    try {
+
+      await API.post(
+        `/reviews/${reviewId}/like`
+      );
+
+      toast.success("Review liked");
+
+    } catch (error) {
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to like review"
+      );
+    }
+  };
 
   useEffect(() => {
 
@@ -307,6 +327,23 @@ function MovieDetails() {
                   <p>
                     {review.review}
                   </p>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      likeReview(review.id)
+                    }
+                    style={{
+                      background: "#ffd60a",
+                      border: "none",
+                      borderRadius: "8px",
+                      padding: "8px 12px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Like Review
+                  </button>
 
                 </div>
 

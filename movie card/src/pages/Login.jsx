@@ -15,16 +15,12 @@ import {
 } from "../context/AuthContext";
 
 import API from "../api/axios";
-
 import "../styles/Auth.css";
 
 function Login() {
 
-  const navigate =
-    useNavigate();
-
-  const { login } =
-    useContext(AuthContext);
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const [email, setEmail] =
     useState("");
@@ -47,8 +43,7 @@ function Login() {
           }
         );
 
-      const data =
-        response.data;
+      const data = response.data;
 
       localStorage.setItem(
         "token",
@@ -70,10 +65,7 @@ function Login() {
         data.is_admin
       );
 
-      toast.success(
-        "Login Successful"
-      );
-
+      toast.success("Login Successful");
       navigate("/");
 
     } catch (error) {
@@ -87,48 +79,82 @@ function Login() {
 
   return (
     <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-left">
+          <div className="auth-overlay">
+            <div className="auth-logo">
+              <span className="auth-logo-mark">
+                M
+              </span>
+              MovieCard
+            </div>
 
-      <form
-        className="auth-form"
-        onSubmit={handleLogin}
-      >
+            <div>
+              <h1>
+                Find Your
+                <br />
+                Next Favorite
+                <br />
+                Movie
+              </h1>
 
-        <h1>Login</h1>
+              <p>
+                Personalized recommendations based on your searches, favorites, reviews, and watchlist.
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <input
-          type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          required
-        />
+        <div className="auth-right">
+          <form
+            className="auth-form"
+            onSubmit={handleLogin}
+          >
+            <h1>Welcome Back!</h1>
 
-        <input
-          type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-          required
-        />
+            <p className="auth-subtitle">
+              Login to continue
+            </p>
 
-        <button type="submit">
-          Login
-        </button>
+            <div className="auth-input">
+              <span>@</span>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
+                required
+              />
+            </div>
 
-        <p>
-          No account?
+            <div className="auth-input">
+              <span>*</span>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
+                required
+              />
+            </div>
 
-          <Link to="/register">
-            Register
-          </Link>
-        </p>
+            <button type="submit">
+              Login
+            </button>
 
-      </form>
-
+            <p className="auth-note">
+              No account?
+              <Link to="/register">
+                Register
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

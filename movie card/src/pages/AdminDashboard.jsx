@@ -6,6 +6,7 @@ import {
 } from "react";
 
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import API from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
 
@@ -106,9 +107,11 @@ function AdminDashboard() {
   if (loading) {
 
     return (
-      <div>
+      <div className="page-shell">
         <Navbar />
-        <h2>Loading...</h2>
+        <main className="page-inner">
+          <h2>Loading...</h2>
+        </main>
       </div>
     );
   }
@@ -116,120 +119,115 @@ function AdminDashboard() {
   if (error) {
 
     return (
-      <div>
+      <div className="page-shell">
         <Navbar />
-        <h2>Error: {error}</h2>
+        <main className="page-inner">
+          <h2>Error: {error}</h2>
+        </main>
       </div>
     );
   }
 
   return (
-    <div>
-
+    <div className="page-shell">
       <Navbar />
 
-      <h1>
-        Admin Dashboard
-      </h1>
+      <main className="page-inner admin-grid">
+        <div>
+          <h1 className="page-title">
+            Admin Dashboard
+          </h1>
 
-      <hr />
+          <p className="page-subtitle">
+            Monitor users, reviews, favorites, and search activity.
+          </p>
+        </div>
 
-      <h2>
-        Dashboard Statistics
-      </h2>
+        <section className="stats-grid">
+          <div className="stat-card glass-panel">
+            <span>Total Users</span>
+            <strong>{stats.total_users}</strong>
+          </div>
 
-      <h3>
-        Total Users: {stats.total_users}
-      </h3>
+          <div className="stat-card glass-panel">
+            <span>Total Reviews</span>
+            <strong>{stats.total_reviews}</strong>
+          </div>
 
-      <h3>
-        Total Reviews: {stats.total_reviews}
-      </h3>
+          <div className="stat-card glass-panel">
+            <span>Total Favorites</span>
+            <strong>{stats.total_favorites}</strong>
+          </div>
 
-      <h3>
-        Total Favorites: {stats.total_favorites}
-      </h3>
+          <div className="stat-card glass-panel">
+            <span>Top Search</span>
+            <strong>{stats.most_searched_movie}</strong>
+          </div>
+        </section>
 
-      <h3>
-        Most Searched Movie: {stats.most_searched_movie}
-      </h3>
+        <section className="glass-panel" style={{ padding: "20px" }}>
+          <h2>User List</h2>
 
-      <hr />
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Admin</th>
+              </tr>
+            </thead>
 
-      <h2>
-        User List
-      </h2>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.username}</td>
+                  <td>{user.email}</td>
+                  <td>{user.is_admin ? "Yes" : "No"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
-      <table border="1">
+        <section className="glass-panel" style={{ padding: "20px" }}>
+          <h2>Review Moderation</h2>
 
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Admin</th>
-          </tr>
-        </thead>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Movie</th>
+                <th>Comment</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-        <tbody>
+            <tbody>
+              {reviews.map((review) => (
+                <tr key={review.id}>
+                  <td>{review.id}</td>
+                  <td>{review.movie_id}</td>
+                  <td>{review.review}</td>
+                  <td>
+                    <button
+                      className="danger-action"
+                      onClick={() =>
+                        deleteReview(review.id)
+                      }
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </main>
 
-          {users.map((user) => (
-
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>{user.is_admin ? "Yes" : "No"}</td>
-            </tr>
-
-          ))}
-
-        </tbody>
-
-      </table>
-
-      <hr />
-
-      <h2>
-        Review Moderation
-      </h2>
-
-      <table border="1">
-
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Movie</th>
-            <th>Comment</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          {reviews.map((review) => (
-
-            <tr key={review.id}>
-              <td>{review.id}</td>
-              <td>{review.movie_id}</td>
-              <td>{review.review}</td>
-              <td>
-                <button
-                  onClick={() =>
-                    deleteReview(review.id)
-                  }
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-
-          ))}
-
-        </tbody>
-
-      </table>
-
+      <Footer />
     </div>
   );
 }

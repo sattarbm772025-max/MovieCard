@@ -13,6 +13,7 @@ import {
   AuthContext,
 } from "../context/AuthContext";
 
+import API from "../api/axios";
 import "./Navbar.css";
 
 function Navbar() {
@@ -27,6 +28,9 @@ function Navbar() {
 
   const [darkMode, setDarkMode] =
     useState(true);
+
+  const [unreadCount, setUnreadCount] =
+    useState(0);
 
   useEffect(() => {
 
@@ -43,6 +47,45 @@ function Navbar() {
     }
 
   }, []);
+
+  useEffect(() => {
+
+    if (!token) {
+
+      setUnreadCount(0);
+      return;
+    }
+
+    const fetchUnreadCount = async () => {
+
+      try {
+
+        const response =
+          await API.get(
+            "/notifications/unread-count"
+          );
+
+        setUnreadCount(
+          response.data.unread_count || 0
+        );
+
+      } catch {
+
+        setUnreadCount(0);
+      }
+    };
+
+    fetchUnreadCount();
+
+    const intervalId = setInterval(
+      fetchUnreadCount,
+      30000
+    );
+
+    return () =>
+      clearInterval(intervalId);
+
+  }, [token]);
 
   const toggleTheme = () => {
 
@@ -83,7 +126,7 @@ function Navbar() {
     <nav className="navbar">
 
       <div className="logo">
-        🎬 Movie App
+        MovieCard
       </div>
 
       <div className="nav-links">
@@ -107,7 +150,35 @@ function Navbar() {
             </Link>
 
             <Link to="/notifications">
-              🔔        
+              <span
+                style={{
+                  position: "relative",
+                  display: "inline-block",
+                }}
+              >
+                Alerts
+
+                {unreadCount > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-10px",
+                      right: "-14px",
+                      minWidth: "18px",
+                      height: "18px",
+                      padding: "0 5px",
+                      borderRadius: "999px",
+                      background: "#ef4444",
+                      color: "white",
+                      fontSize: "12px",
+                      lineHeight: "18px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
+              </span>
             </Link>
 
             <Link to="/profile">

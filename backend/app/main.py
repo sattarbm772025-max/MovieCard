@@ -14,6 +14,7 @@ from app.models.viewed_movie import ViewedMovie
 from app.models.watchlist import Watchlist
 from app.models.collection import Collection
 from app.models.collection_movie import CollectionMovie
+from app.models.notification import Notification
 from app.models.review_like import ReviewLike
 from app.models.collection_follow import CollectionFollow
 
@@ -46,11 +47,14 @@ origins = [
     "http://127.0.0.1:5173",
     "https://movie-card-steel.vercel.app",
     "https://movie-card-7ki2cetro-abdulstackly.vercel.app",
+    "https://movie-card-1uy29ichm-abdulstackly.vercel.app",
+    "https://movie-card-b6gbrnp02-abdulstackly.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=r"https://movie-card-[a-z0-9-]+\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,8 +1,7 @@
 from sqlalchemy import (
     Column,
     Integer,
-    ForeignKey,
-    true
+    ForeignKey
 )
 
 from app.database.connection import Base
@@ -15,7 +14,7 @@ class CollectionFollow(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=true
+        index=True
     )
 
     collection_id = Column(

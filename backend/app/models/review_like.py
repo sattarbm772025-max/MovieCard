@@ -1,8 +1,7 @@
 from sqlalchemy import (
     Column,
     Integer,
-    ForeignKey,
-    true
+    ForeignKey
 )
 
 from app.database.connection import Base
@@ -16,7 +15,7 @@ class ReviewLike(Base):
     id = Column(
         Integer,
         primary_key=True,
-        index=true
+        index=True
     )
 
     review_id = Column(
