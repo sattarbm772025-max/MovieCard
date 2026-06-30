@@ -228,14 +228,24 @@ function MovieCard({ movie }) {
             className={`compare-btn ${
               isCompareSelected ? "selected" : ""
             }`}
+            aria-label={
+              isCompareSelected
+                ? "Remove from compare"
+                : "Compare movie"
+            }
+            title={
+              isCompareSelected
+                ? "Selected for compare"
+                : "Compare"
+            }
             onClick={(e) => {
               e.stopPropagation();
               toggleCompare();
             }}
           >
             {isCompareSelected
-              ? "Selected"
-              : "Compare"}
+              ? "On"
+              : "VS"}
           </button>
 
         </div>

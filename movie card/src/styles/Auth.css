@@ -20,9 +20,7 @@
 .auth-left {
   width: 45%;
   position: relative;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.78)),
-    url("../assets/login-bg.jpg");
+  background: url("../assets/login-bg.jpg");
   background-size: cover;
   background-position: center;
 }
@@ -34,7 +32,13 @@
   flex-direction: column;
   justify-content: space-between;
   color: white;
-  background: rgba(0, 0, 0, 0.48);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.18) 0%,
+    rgba(0, 0, 0, 0.08) 45%,
+    rgba(0, 0, 0, 0.38) 100%
+  );
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.5);
 }
 
 .auth-logo {
@@ -65,7 +69,7 @@
 .auth-overlay p {
   max-width: 390px;
   margin: 0;
-  color: #dddddd;
+  color: #ffffff;
   font-size: 20px;
   line-height: 1.55;
 }

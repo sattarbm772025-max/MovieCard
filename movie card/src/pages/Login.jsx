@@ -91,15 +91,15 @@ function Login() {
 
             <div>
               <h1>
-                Find Your
+                Build Your
                 <br />
-                Next Favorite
+                Personal
                 <br />
-                Movie
+                Movie Space
               </h1>
 
               <p>
-                Personalized recommendations based on your searches, favorites, reviews, and watchlist.
+                Create collections, save favorites, build watchlists, and discover better recommendations.
               </p>
             </div>
           </div>
