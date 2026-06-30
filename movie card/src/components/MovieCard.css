@@ -100,7 +100,8 @@
 }
 
 .favorite-btn,
-.watch-btn {
+.watch-btn,
+.compare-btn {
   flex: 1;
   min-height: 38px;
   border: none;
@@ -119,6 +120,16 @@
 .watch-btn {
   background: #ffd60a;
   color: #111111;
+}
+
+.compare-btn {
+  background: #ffffff;
+  color: #111111;
+}
+
+.compare-btn.selected {
+  background: #22c55e;
+  color: #ffffff;
 }
 
 body.light-mode .movie-card {

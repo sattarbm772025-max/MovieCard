@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import API from "../api/axios";
+import {
+  isCompareMovieSelected,
+  toggleCompareMovie,
+} from "../utils/compareSelection";
 import "./MovieCard.css";
 
 function MovieCard({ movie }) {
@@ -11,6 +15,11 @@ function MovieCard({ movie }) {
 
   const [isFavorite, setIsFavorite] =
     useState(false);
+
+  const [isCompareSelected, setIsCompareSelected] =
+    useState(() =>
+      isCompareMovieSelected(movie.id)
+    );
 
   useEffect(() => {
 
@@ -44,6 +53,28 @@ function MovieCard({ movie }) {
 
     return () => {
       active = false;
+    };
+
+  }, [movie.id]);
+
+  useEffect(() => {
+
+    const refreshCompareState = () => {
+      setIsCompareSelected(
+        isCompareMovieSelected(movie.id)
+      );
+    };
+
+    window.addEventListener(
+      "moviecard_compare_selection_changed",
+      refreshCompareState
+    );
+
+    return () => {
+      window.removeEventListener(
+        "moviecard_compare_selection_changed",
+        refreshCompareState
+      );
     };
 
   }, [movie.id]);
@@ -118,6 +149,21 @@ function MovieCard({ movie }) {
     }
   };
 
+  const toggleCompare = () => {
+
+    const result =
+      toggleCompareMovie(movie);
+
+    setIsCompareSelected(result.selected);
+
+    if (result.limitReached) {
+      toast.error(result.message);
+      return;
+    }
+
+    toast.success(result.message);
+  };
+
   return (
 
     <div
@@ -176,6 +222,20 @@ function MovieCard({ movie }) {
             }}
           >
             Watchlist
+          </button>
+
+          <button
+            className={`compare-btn ${
+              isCompareSelected ? "selected" : ""
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleCompare();
+            }}
+          >
+            {isCompareSelected
+              ? "Selected"
+              : "Compare"}
           </button>
 
         </div>

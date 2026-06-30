@@ -149,6 +149,10 @@ function Navbar() {
               Collections
             </Link>
 
+            <Link to="/compare">
+              Compare
+            </Link>
+
             <Link to="/notifications">
               <span
                 style={{

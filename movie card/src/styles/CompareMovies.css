@@ -1,0 +1,162 @@
+.compare-page {
+  color: #ffffff;
+}
+
+.compare-inner {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.compare-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.compare-card {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.compare-card img {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  object-fit: cover;
+}
+
+.compare-card-content {
+  padding: 22px;
+}
+
+.compare-card-content h2 {
+  margin: 0 0 12px;
+  font-size: 30px;
+  line-height: 1.1;
+}
+
+.compare-plot {
+  margin: 0 0 18px;
+  color: #cfcfcf;
+  line-height: 1.55;
+}
+
+.compare-details {
+  display: grid;
+  gap: 10px;
+}
+
+.compare-detail {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.compare-detail span {
+  flex: 0 0 auto;
+  color: #a7a7a7;
+  font-weight: 800;
+}
+
+.compare-detail strong {
+  text-align: right;
+}
+
+.compare-detail.is-best {
+  border-color: rgba(34, 197, 94, 0.55);
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.compare-detail.is-lower {
+  opacity: 0.78;
+}
+
+.compare-summary,
+.compare-empty {
+  margin-top: 22px;
+  padding: 24px;
+}
+
+.compare-summary h2,
+.compare-empty h2 {
+  margin: 0 0 12px;
+}
+
+.compare-summary p,
+.compare-empty p {
+  margin: 8px 0 0;
+  color: #cfcfcf;
+}
+
+body.light-mode .compare-page {
+  color: #111111;
+}
+
+body.light-mode .compare-plot,
+body.light-mode .compare-summary p,
+body.light-mode .compare-empty p {
+  color: #52525b;
+}
+
+body.light-mode .compare-detail {
+  background: #f4f4f5;
+  border-color: #e5e7eb;
+}
+
+body.light-mode .compare-detail span {
+  color: #71717a;
+}
+
+body.light-mode .compare-detail.is-best {
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(34, 197, 94, 0.14);
+}
+
+@media (max-width: 980px) {
+  .compare-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .compare-inner {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .compare-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .compare-card {
+    grid-template-columns: 1fr;
+  }
+
+  .compare-card img {
+    height: 420px;
+    min-height: 0;
+  }
+
+  .compare-detail {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .compare-detail strong {
+    text-align: left;
+  }
+}
