@@ -64,19 +64,7 @@ function Register() {
               MovieCard
             </div>
 
-            <div>
-              <h1>
-                Build Your
-                <br />
-                Personal
-                <br />
-                Movie Space
-              </h1>
-
-              <p>
-                Create collections, follow other users, save favorites, and discover better recommendations.
-              </p>
-            </div>
+            <div />
           </div>
         </div>
 

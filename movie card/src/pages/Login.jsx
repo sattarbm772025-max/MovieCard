@@ -89,19 +89,7 @@ function Login() {
               MovieCard
             </div>
 
-            <div>
-              <h1>
-                Build Your
-                <br />
-                Personal
-                <br />
-                Movie Space
-              </h1>
-
-              <p>
-                Create collections, save favorites, build watchlists, and discover better recommendations.
-              </p>
-            </div>
+            <div />
           </div>
         </div>
 
