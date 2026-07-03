@@ -196,58 +196,93 @@ def compare_message(
     )
 
 
+def highest_compare_message(
+    movies,
+    key,
+    label
+):
+
+    values = [
+        movie[key]
+        for movie in movies
+    ]
+
+    best_value = max(values)
+
+    best_movies = [
+        movie["title"]
+        for movie in movies
+        if movie[key] == best_value
+    ]
+
+    if len(best_movies) == len(movies):
+
+        return (
+            f"All selected movies have the same {label}."
+        )
+
+    if len(best_movies) > 1:
+
+        return (
+            f"{', '.join(best_movies)} are tied for the highest {label}."
+        )
+
+    return (
+        f"{best_movies[0]} has the highest {label}."
+    )
+
+
 @router.get("/movies/compare")
 def compare_movies(
     movie1: str,
     movie2: str,
+    movie3: str | None = None,
     db: Session = Depends(get_db)
 ):
 
-    if not movie1 or not movie2:
+    movie_ids = [
+        movie_id
+        for movie_id in [movie1, movie2, movie3]
+        if movie_id
+    ]
+
+    if len(movie_ids) < 2:
 
         raise HTTPException(
             status_code=400,
-            detail="Two movie ids are required"
+            detail="At least two movie ids are required"
         )
 
-    if movie1 == movie2:
+    if len(set(movie_ids)) != len(movie_ids):
 
         raise HTTPException(
             status_code=400,
-            detail="Please select two different movies"
+            detail="Please select different movies"
         )
 
-    first_movie = build_compare_movie(
-        movie1,
-        db
-    )
-
-    second_movie = build_compare_movie(
-        movie2,
-        db
-    )
+    movies = [
+        build_compare_movie(
+            movie_id,
+            db
+        )
+        for movie_id in movie_ids
+    ]
 
     return {
-        "movies": [
-            first_movie,
-            second_movie,
-        ],
+        "movies": movies,
         "summary": [
-            compare_message(
-                first_movie,
-                second_movie,
+            highest_compare_message(
+                movies,
                 "imdb_rating",
                 "IMDb rating"
             ),
-            compare_message(
-                first_movie,
-                second_movie,
+            highest_compare_message(
+                movies,
                 "user_average_rating",
                 "user rating"
             ),
-            compare_message(
-                first_movie,
-                second_movie,
+            highest_compare_message(
+                movies,
                 "total_reviews",
                 "review count"
             ),
