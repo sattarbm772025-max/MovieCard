@@ -58,12 +58,12 @@ export function toggleCompareMovie(movie) {
     };
   }
 
-  if (currentMovies.length >= 2) {
+  if (currentMovies.length >= 3) {
 
     return {
       selected: false,
       movies: currentMovies,
-      message: "You can compare only 2 movies",
+      message: "You can compare only 3 movies",
       limitReached: true,
     };
   }
@@ -83,7 +83,7 @@ export function toggleCompareMovie(movie) {
     selected: true,
     movies: nextMovies,
     message:
-      nextMovies.length === 2
+      nextMovies.length >= 2
         ? "Ready to compare"
         : "Movie selected for comparison",
   };

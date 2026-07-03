@@ -194,6 +194,41 @@ a {
   font-weight: 700;
 }
 
+.watchlist-content small {
+  display: block;
+  margin-top: 8px;
+  color: #a7a7a7;
+}
+
+.watchlist-filters {
+  display: inline-flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 8px;
+}
+
+.watchlist-filters button {
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  padding: 10px 16px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.watchlist-filters button.active {
+  background: #ffd60a;
+  color: #111111;
+}
+
+.watchlist-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 body.light-mode {
   background: #f5f5f5 !important;
   color: #111111 !important;
@@ -246,5 +281,14 @@ body.light-mode .form-grid input {
 
   .watchlist-card button {
     grid-column: 1 / -1;
+  }
+
+  .watchlist-actions {
+    grid-column: 1 / -1;
+    justify-content: stretch;
+  }
+
+  .watchlist-actions button {
+    flex: 1 1 100%;
   }
 }

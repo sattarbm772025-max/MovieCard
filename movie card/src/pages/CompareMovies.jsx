@@ -63,13 +63,16 @@ function CompareMovies() {
   const initialMovieIds = [
     searchParams.get("movie1"),
     searchParams.get("movie2"),
+    searchParams.get("movie3"),
   ].filter(Boolean);
 
   const [movieIds, setMovieIds] =
     useState(
-      initialMovieIds.length === 2
+      initialMovieIds.length >= 2
         ? initialMovieIds
-        : selectedMovies.map((movie) => movie.id)
+        : selectedMovies
+            .slice(0, 3)
+            .map((movie) => movie.id)
     );
 
   const [movies, setMovies] =
@@ -83,7 +86,7 @@ function CompareMovies() {
 
   useEffect(() => {
 
-    if (movieIds.length !== 2) {
+    if (movieIds.length < 2) {
       return;
     }
 
@@ -93,18 +96,25 @@ function CompareMovies() {
 
         setLoading(true);
 
+        const params =
+          new URLSearchParams();
+
+        movieIds.forEach((movieId, index) => {
+          params.set(
+            `movie${index + 1}`,
+            movieId
+          );
+        });
+
         const response =
           await API.get(
-            `/movies/compare?movie1=${encodeURIComponent(movieIds[0])}&movie2=${encodeURIComponent(movieIds[1])}`
+            `/movies/compare?${params.toString()}`
           );
 
         setMovies(response.data.movies || []);
         setSummary(response.data.summary || []);
 
-        setSearchParams({
-          movie1: movieIds[0],
-          movie2: movieIds[1],
-        });
+        setSearchParams(params);
 
       } catch (error) {
 
@@ -136,6 +146,26 @@ function CompareMovies() {
     toast.success("Comparison cleared");
   };
 
+  const shareComparison = async () => {
+
+    const link = window.location.href;
+
+    try {
+
+      await navigator.clipboard.writeText(link);
+      toast.success("Comparison link copied");
+
+    } catch {
+
+      toast.error("Copy this page URL to share");
+    }
+  };
+
+  const exportPdf = () => {
+
+    window.print();
+  };
+
   return (
     <div className="compare-page page-shell">
       <Navbar />
@@ -148,24 +178,42 @@ function CompareMovies() {
             </h1>
 
             <p className="page-subtitle">
-              Select two movies from Home and compare ratings, reviews, story, and key details.
+              Select up to three movies from Home and compare ratings, reviews, story, and key details.
             </p>
           </div>
 
-          <button
-            className="danger-action"
-            onClick={clearSelection}
-          >
-            Clear
-          </button>
+          <div className="compare-actions">
+            <button
+              className="primary-action"
+              onClick={shareComparison}
+              disabled={movies.length < 2}
+            >
+              Share Link
+            </button>
+
+            <button
+              className="primary-action"
+              onClick={exportPdf}
+              disabled={movies.length < 2}
+            >
+              Export PDF
+            </button>
+
+            <button
+              className="danger-action"
+              onClick={clearSelection}
+            >
+              Clear
+            </button>
+          </div>
         </header>
 
-        {movieIds.length !== 2 ? (
+        {movieIds.length < 2 ? (
 
           <section className="compare-empty glass-panel">
-            <h2>Select 2 movies to compare</h2>
+            <h2>Select 2 or 3 movies to compare</h2>
             <p>
-              Use the Compare button on any movie card. You can select only two movies at a time.
+              Use the Compare button on any movie card. You can select up to three movies at a time.
             </p>
           </section>
 

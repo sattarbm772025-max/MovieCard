@@ -14,6 +14,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Collections from "./pages/Collections";
 import Notifications from "./pages/Notifications";
 import CompareMovies from "./pages/CompareMovies";
+import WatchedHistory from "./pages/WatchedHistory";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -105,6 +106,15 @@ function App() {
           element={
             <ProtectedRoute>
               <CompareMovies />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/watched"
+          element={
+            <ProtectedRoute>
+              <WatchedHistory />
             </ProtectedRoute>
           }
         />

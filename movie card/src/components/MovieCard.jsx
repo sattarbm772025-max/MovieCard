@@ -21,6 +21,9 @@ function MovieCard({ movie }) {
       isCompareMovieSelected(movie.id)
     );
 
+  const [isWatched, setIsWatched] =
+    useState(false);
+
   useEffect(() => {
 
     let active = true;
@@ -50,6 +53,41 @@ function MovieCard({ movie }) {
     };
 
     checkFavorite();
+
+    return () => {
+      active = false;
+    };
+
+  }, [movie.id]);
+
+  useEffect(() => {
+
+    let active = true;
+
+    const checkWatched = async () => {
+
+      try {
+
+        const response =
+          await API.get(
+            `/watched/status/${movie.id}`
+          );
+
+        if (active) {
+          setIsWatched(
+            Boolean(response.data.watched)
+          );
+        }
+
+      } catch {
+
+        if (active) {
+          setIsWatched(false);
+        }
+      }
+    };
+
+    checkWatched();
 
     return () => {
       active = false;
@@ -164,6 +202,40 @@ function MovieCard({ movie }) {
     toast.success(result.message);
   };
 
+  const markAsWatched = async () => {
+
+    try {
+
+      await API.post(
+        "/watched",
+        {
+          movie_id: movie.id,
+          title: movie.title,
+          poster: movie.poster,
+          genre: movie.genre,
+          imdb_rating: String(movie.rating || ""),
+        }
+      );
+
+      setIsWatched(true);
+      toast.success("Marked as watched");
+
+    } catch (error) {
+
+      if (
+        error.response?.data?.detail ===
+        "Movie already exists in watched history"
+      ) {
+        setIsWatched(true);
+      }
+
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to mark as watched"
+      );
+    }
+  };
+
   return (
 
     <div
@@ -178,6 +250,12 @@ function MovieCard({ movie }) {
         alt={movie.title}
         className="movie-image"
       />
+
+      {isWatched && (
+        <span className="watched-badge">
+          Watched
+        </span>
+      )}
 
       <div className="movie-content">
 
@@ -246,6 +324,19 @@ function MovieCard({ movie }) {
             {isCompareSelected
               ? "On"
               : "VS"}
+          </button>
+
+          <button
+            className={`watched-btn ${
+              isWatched ? "selected" : ""
+            }`}
+            disabled={isWatched}
+            onClick={(e) => {
+              e.stopPropagation();
+              markAsWatched();
+            }}
+          >
+            {isWatched ? "Watched" : "Mark Watched"}
           </button>
 
         </div>

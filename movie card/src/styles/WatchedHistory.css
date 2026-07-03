@@ -1,0 +1,153 @@
+.watched-page {
+  color: #ffffff;
+}
+
+.watched-inner {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.watched-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.watched-count {
+  min-width: 170px;
+  padding: 18px;
+  text-align: center;
+}
+
+.watched-count span {
+  display: block;
+  color: #a7a7a7;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.watched-count strong {
+  display: block;
+  margin-top: 6px;
+  color: #ffd60a;
+  font-size: 34px;
+}
+
+.watched-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+.watched-toolbar label {
+  display: grid;
+  gap: 8px;
+  color: #a7a7a7;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.watched-toolbar select {
+  min-width: 210px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: #121214;
+  color: #ffffff;
+  padding: 12px 14px;
+}
+
+.watched-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.watched-card {
+  overflow: hidden;
+}
+
+.watched-card img {
+  width: 100%;
+  height: 360px;
+  display: block;
+  object-fit: cover;
+}
+
+.watched-card-content {
+  padding: 18px;
+}
+
+.watched-status {
+  display: inline-flex;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: #22c55e;
+  color: #ffffff;
+  padding: 7px 11px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.watched-card h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.watched-card p {
+  margin: 0 0 14px;
+  color: #a7a7a7;
+}
+
+.watched-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: #ffd60a;
+  font-weight: 900;
+}
+
+.watched-actions {
+  display: grid;
+  gap: 10px;
+}
+
+body.light-mode .watched-page {
+  color: #111111;
+}
+
+body.light-mode .watched-count span,
+body.light-mode .watched-toolbar label,
+body.light-mode .watched-card p {
+  color: #6b7280;
+}
+
+body.light-mode .watched-toolbar select {
+  background: #ffffff;
+  color: #111111;
+  border-color: #d1d5db;
+}
+
+@media (max-width: 680px) {
+  .watched-inner {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .watched-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .watched-toolbar,
+  .watched-toolbar label,
+  .watched-toolbar select {
+    width: 100%;
+  }
+}

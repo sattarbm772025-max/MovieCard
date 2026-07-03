@@ -145,6 +145,10 @@ function Navbar() {
               Watchlist
             </Link>
 
+            <Link to="/watched">
+              Watched
+            </Link>
+
             <Link to="/collections">
               Collections
             </Link>
