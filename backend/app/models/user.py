@@ -77,6 +77,12 @@ class User(Base):
         cascade="all, delete"
     )
 
+    preferences = relationship(
+        "UserPreference",
+        backref="user",
+        cascade="all, delete"
+    )
+
 
 # Import relationship targets so SQLAlchemy can resolve string-based
 # relationships even when a route imports User before app.main imports models.
@@ -86,3 +92,4 @@ from app.models import search_history  # noqa: E402, F401
 from app.models import viewed_movie  # noqa: E402, F401
 from app.models import watchlist  # noqa: E402, F401
 from app.models import collection  # noqa: E402, F401
+from app.models import user_preference  # noqa: E402, F401

@@ -18,6 +18,7 @@ from app.models.notification import Notification
 from app.models.review_like import ReviewLike
 from app.models.collection_follow import CollectionFollow
 from app.models.watched_movie import WatchedMovie
+from app.models.user_preference import UserPreference
 
 from app.routes import (
     auth,
@@ -34,7 +35,8 @@ from app.routes import (
     notifications,
     review_likes,
     collection_follows,
-    watched
+    watched,
+    preferences
     
 )
 
@@ -77,6 +79,7 @@ app.include_router(notifications.router)
 app.include_router(review_likes.router)
 app.include_router(collection_follows.router)
 app.include_router(watched.router)
+app.include_router(preferences.router)
 
 
 @app.get("/")
