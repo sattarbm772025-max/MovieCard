@@ -60,18 +60,6 @@ def get_profile(
             detail="User not found"
         )
 
-    if not data.username.strip():
-        raise HTTPException(
-            status_code=400,
-            detail="Username is required"
-        )
-
-    if "@" not in data.email:
-        raise HTTPException(
-            status_code=400,
-            detail="Valid email is required"
-        )
-
     return {
         "id": user.id,
         "username": user.username,
@@ -94,6 +82,18 @@ def update_profile(
         raise HTTPException(
             status_code=404,
             detail="User not found"
+        )
+
+    if not data.username.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Username is required"
+        )
+
+    if "@" not in data.email:
+        raise HTTPException(
+            status_code=400,
+            detail="Valid email is required"
         )
 
     existing = (

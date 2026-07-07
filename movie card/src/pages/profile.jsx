@@ -100,21 +100,52 @@ function Profile() {
         profileResponse,
         statsResponse,
         preferencesResponse,
-      ] = await Promise.all([
+      ] = await Promise.allSettled([
         API.get("/profile"),
         API.get("/profile/stats"),
         API.get("/preferences"),
       ]);
 
-      setProfile(profileResponse.data);
-      setDraftProfile({
-        username:
-          profileResponse.data.username || "",
-        email:
-          profileResponse.data.email || "",
-      });
-      setStats(statsResponse.data);
-      setPreferences(preferencesResponse.data);
+      if (profileResponse.status === "fulfilled") {
+        setProfile(profileResponse.value.data);
+        setDraftProfile({
+          username:
+            profileResponse.value.data.username || "",
+          email:
+            profileResponse.value.data.email || "",
+        });
+      } else {
+        showToast(
+          profileResponse.reason?.response?.data?.detail ||
+          "Failed to load profile details",
+          "error"
+        );
+      }
+
+      if (statsResponse.status === "fulfilled") {
+        setStats({
+          watched_count:
+            statsResponse.value.data.watched_count || 0,
+          favorites_count:
+            statsResponse.value.data.favorites_count || 0,
+          watchlist_count:
+            statsResponse.value.data.watchlist_count || 0,
+          reviews_count:
+            statsResponse.value.data.reviews_count || 0,
+        });
+      } else {
+        showToast(
+          statsResponse.reason?.response?.data?.detail ||
+          "Failed to load profile stats",
+          "error"
+        );
+      }
+
+      if (preferencesResponse.status === "fulfilled") {
+        setPreferences(preferencesResponse.value.data);
+      } else {
+        setPreferences([]);
+      }
 
     } catch (error) {
 
