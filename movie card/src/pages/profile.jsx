@@ -145,6 +145,11 @@ function Profile() {
         setPreferences(preferencesResponse.value.data);
       } else {
         setPreferences([]);
+        showToast(
+          preferencesResponse.reason?.response?.data?.detail ||
+          "Failed to load genre preferences",
+          "error"
+        );
       }
 
     } catch (error) {

@@ -137,6 +137,10 @@ function Navbar() {
 
         {token && (
           <>
+            <Link to="/dashboard">
+              Dashboard
+            </Link>
+
             <Link to="/favorites">
               Favorites
             </Link>

@@ -15,6 +15,7 @@ import Collections from "./pages/Collections";
 import Notifications from "./pages/Notifications";
 import CompareMovies from "./pages/CompareMovies";
 import WatchedHistory from "./pages/WatchedHistory";
+import Dashboard from "./pages/Dashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -97,6 +98,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Collections />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
             </ProtectedRoute>
           }
         />

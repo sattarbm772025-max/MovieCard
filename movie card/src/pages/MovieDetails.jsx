@@ -45,7 +45,10 @@ function MovieDetails() {
 
     } catch (error) {
 
-      console.log(error);
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to load movie"
+      );
 
     } finally {
 
@@ -64,7 +67,10 @@ function MovieDetails() {
 
     } catch (error) {
 
-      console.log(error);
+      toast.error(
+        error.response?.data?.detail ||
+        "Failed to load reviews"
+      );
     }
   }, [id]);
 
@@ -84,7 +90,10 @@ function MovieDetails() {
 
       } catch (error) {
 
-        console.log(error);
+        toast.error(
+          error.response?.data?.detail ||
+          "Failed to load average rating"
+        );
       }
     }, [id]);
 
@@ -102,7 +111,7 @@ function MovieDetails() {
           }
         );
 
-        alert(
+        toast.success(
           "Review Added Successfully"
         );
 
@@ -114,7 +123,7 @@ function MovieDetails() {
 
       } catch (error) {
 
-        alert(
+        toast.error(
           error.response?.data?.detail ||
           "Failed to add review"
         );

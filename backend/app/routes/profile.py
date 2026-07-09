@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from passlib.context import CryptContext
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 from app.database.connection import SessionLocal
 from app.models.favorite import Favorite
@@ -24,7 +24,7 @@ pwd_context = CryptContext(
 class ProfileUpdate(BaseModel):
 
     username: str
-    email: str
+    email: EmailStr
 
 
 class PasswordUpdate(BaseModel):
@@ -90,12 +90,6 @@ def update_profile(
             detail="Username is required"
         )
 
-    if "@" not in data.email:
-        raise HTTPException(
-            status_code=400,
-            detail="Valid email is required"
-        )
-
     existing = (
         db.query(User)
         .filter(
@@ -127,7 +121,7 @@ def update_profile(
         )
 
     user.username = data.username.strip()
-    user.email = data.email
+    user.email = str(data.email)
 
     db.commit()
 

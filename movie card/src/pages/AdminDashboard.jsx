@@ -9,11 +9,15 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import API from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 function AdminDashboard() {
 
   const { isAdmin } =
     useContext(AuthContext);
+
+  const { showToast } =
+    useToast();
 
   const [stats, setStats] =
     useState({});
@@ -128,9 +132,10 @@ function AdminDashboard() {
 
       } catch (err) {
 
-        alert(
+        showToast(
           err.response?.data?.detail ||
-          "Failed to delete review"
+          "Failed to delete review",
+          "error"
         );
       }
     };
