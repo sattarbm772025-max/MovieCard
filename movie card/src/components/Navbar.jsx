@@ -1,5 +1,5 @@
 import {
-  Link,
+  NavLink,
   useNavigate,
 } from "react-router-dom";
 
@@ -38,11 +38,7 @@ function Navbar() {
       localStorage.getItem("theme");
 
     if (savedTheme === "light") {
-
-      document.body.classList.add(
-        "light-mode"
-      );
-
+      document.body.classList.add("light-mode");
       setDarkMode(false);
     }
 
@@ -51,7 +47,6 @@ function Navbar() {
   useEffect(() => {
 
     if (!token) {
-
       setUnreadCount(0);
       return;
     }
@@ -90,26 +85,11 @@ function Navbar() {
   const toggleTheme = () => {
 
     if (darkMode) {
-
-      document.body.classList.add(
-        "light-mode"
-      );
-
-      localStorage.setItem(
-        "theme",
-        "light"
-      );
-
+      document.body.classList.add("light-mode");
+      localStorage.setItem("theme", "light");
     } else {
-
-      document.body.classList.remove(
-        "light-mode"
-      );
-
-      localStorage.setItem(
-        "theme",
-        "dark"
-      );
+      document.body.classList.remove("light-mode");
+      localStorage.setItem("theme", "dark");
     }
 
     setDarkMode(!darkMode);
@@ -118,116 +98,96 @@ function Navbar() {
   const handleLogout = () => {
 
     logout();
-
     navigate("/login");
   };
 
+  const navClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
+
   return (
     <nav className="navbar">
-
       <div className="logo">
         MovieCard
       </div>
 
       <div className="nav-links">
-
-        <Link to="/">
-          <span className="nav-icon">⌂</span>
+        <NavLink to="/" className={navClass}>
+          <span className="nav-icon">H</span>
           Home
-        </Link>
+        </NavLink>
 
         {token && (
           <>
-            <Link to="/dashboard">
-              <span className="nav-icon">▦</span>
+            <NavLink to="/dashboard" className={navClass}>
+              <span className="nav-icon">D</span>
               Dashboard
-            </Link>
+            </NavLink>
 
-            <Link to="/favorites">
-              <span className="nav-icon">♡</span>
+            <NavLink to="/favorites" className={navClass}>
+              <span className="nav-icon">F</span>
               Favorites
-            </Link>
+            </NavLink>
 
-            <Link to="/watchlist">
-              <span className="nav-icon">▤</span>
+            <NavLink to="/watchlist" className={navClass}>
+              <span className="nav-icon">W</span>
               Watchlist
-            </Link>
+            </NavLink>
 
-            <Link to="/watched">
-              <span className="nav-icon">✓</span>
+            <NavLink to="/watched" className={navClass}>
+              <span className="nav-icon">OK</span>
               Watched
-            </Link>
+            </NavLink>
 
-            <Link to="/collections">
-              <span className="nav-icon">□</span>
+            <NavLink to="/collections" className={navClass}>
+              <span className="nav-icon">C</span>
               Collections
-            </Link>
+            </NavLink>
 
-            <Link to="/collections/public">
-              <span className="nav-icon">◇</span>
+            <NavLink to="/collections/public" className={navClass}>
+              <span className="nav-icon">P</span>
               Public
-            </Link>
+            </NavLink>
 
-            <Link to="/compare">
-              <span className="nav-icon">⇄</span>
+            <NavLink to="/compare" className={navClass}>
+              <span className="nav-icon">VS</span>
               Compare
-            </Link>
+            </NavLink>
 
-            <Link to="/notifications">
-              <span
-                style={{
-                  position: "relative",
-                  display: "inline-block",
-                }}
-              >
+            <NavLink to="/notifications" className={navClass}>
+              <span className="alert-link">
+                <span className="nav-icon">N</span>
                 Alerts
-
                 {unreadCount > 0 && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: "-10px",
-                      right: "-14px",
-                      minWidth: "18px",
-                      height: "18px",
-                      padding: "0 5px",
-                      borderRadius: "999px",
-                      background: "#ef4444",
-                      color: "white",
-                      fontSize: "12px",
-                      lineHeight: "18px",
-                      textAlign: "center",
-                    }}
-                  >
+                  <span className="alert-badge">
                     {unreadCount}
                   </span>
                 )}
               </span>
-            </Link>
+            </NavLink>
 
-            <Link to="/profile">
-              <span className="nav-icon">○</span>
+            <NavLink to="/profile" className={navClass}>
+              <span className="nav-icon">U</span>
               Profile
-            </Link>
+            </NavLink>
 
             {isAdmin && (
-              <Link to="/admin">
-                <span className="nav-icon">⚙</span>
+              <NavLink to="/admin" className={navClass}>
+                <span className="nav-icon">A</span>
                 Admin
-              </Link>
+              </NavLink>
             )}
           </>
         )}
 
         {!token ? (
           <>
-            <Link to="/login">
+            <NavLink to="/login" className={navClass}>
               Login
-            </Link>
+            </NavLink>
 
-            <Link to="/register">
+            <NavLink to="/register" className={navClass}>
               Register
-            </Link>
+            </NavLink>
           </>
         ) : (
           <button
@@ -244,9 +204,7 @@ function Navbar() {
         >
           {darkMode ? "Light" : "Dark"}
         </button>
-
       </div>
-
     </nav>
   );
 }

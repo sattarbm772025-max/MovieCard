@@ -206,6 +206,22 @@
   font-weight: 900;
 }
 
+.review-card small {
+  color: #a7a7a7;
+}
+
+.review-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 8px;
+}
+
+.review-card-actions .delete-review-btn {
+  background: #ef4444;
+  color: #ffffff;
+}
+
 .details-loading {
   width: min(720px, calc(100% - 40px));
   margin: 80px auto;

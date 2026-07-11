@@ -197,8 +197,8 @@ function Home() {
 
       <main className="home-container">
         <div className="search-section">
-          <div className="search-box">
-            <span>Search</span>
+          <div className="search-box smart-search-box">
+            <span className="search-icon">S</span>
 
             <input
               type="text"
@@ -215,8 +215,8 @@ function Home() {
             />
           </div>
 
-          <div className="genre-box">
-            <span>Genre</span>
+          <div className="genre-box smart-genre-box">
+            <span className="search-icon">G</span>
 
             <select
               value={genre}
@@ -245,7 +245,7 @@ function Home() {
         </div>
 
         {recommended.length > 0 && (
-          <section className="movie-row">
+          <section className="movie-row recommended-row">
             <h2>Recommended Movies</h2>
             <p className="movie-row-subtitle">
               Personalized picks from your activity.

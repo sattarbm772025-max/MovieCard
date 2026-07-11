@@ -56,6 +56,10 @@ def ensure_sqlite_columns():
             "imdb_rating": "VARCHAR",
             "runtime": "VARCHAR",
         },
+        "reviews": {
+            "movie_title": "VARCHAR",
+            "created_at": "DATETIME",
+        },
     }
 
     with engine.begin() as connection:

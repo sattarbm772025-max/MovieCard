@@ -295,9 +295,9 @@ def get_recent_activity(
         ],
         "recent_reviews": [
             {
-                "movie_title": review.movie_id,
+                "movie_title": review.movie_title or review.movie_id,
                 "rating": review.rating,
-                "created_at": None,
+                "created_at": review.created_at,
             }
             for review in recent_reviews
         ],

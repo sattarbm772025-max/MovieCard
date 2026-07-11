@@ -115,7 +115,55 @@ body.light-mode .favorites-page {
     width: min(100% - 28px, 1180px);
   }
 
+  .favorites-page {
+    background:
+      radial-gradient(circle at 20% 0%, rgba(255, 214, 10, 0.12), transparent 32%),
+      #0d1117;
+  }
+
+  .favorites-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 24px;
+    padding: 18px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
   .favorites-title {
     font-size: 34px;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .favorite-card {
+    min-height: 280px;
+    border-radius: 18px;
+  }
+
+  .favorite-card img {
+    min-height: 280px;
+  }
+
+  .favorite-card h2 {
+    left: 12px;
+    right: 12px;
+    bottom: 58px;
+    font-size: 16px;
+  }
+
+  .favorite-card button {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .favorites-grid {
+    grid-template-columns: 1fr;
   }
 }

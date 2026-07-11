@@ -148,11 +148,12 @@ function MovieDetails() {
 
       await API.post(
         "/reviews",
-        {
-          movie_id: id,
-          review: reviewText,
-          rating,
-        }
+          {
+            movie_id: id,
+            movie_title: movie.Title,
+            review: reviewText,
+            rating,
+          }
       );
 
       showToast("Review added successfully");
@@ -186,6 +187,28 @@ function MovieDetails() {
       showToast(
         error.response?.data?.detail ||
         "Failed to like review",
+        "error"
+      );
+    }
+  };
+
+  const deleteReview = async (reviewId) => {
+
+    try {
+
+      await API.delete(
+        `/reviews/${reviewId}`
+      );
+
+      showToast("Review deleted");
+      fetchReviews();
+      fetchAverageRating();
+
+    } catch (error) {
+
+      showToast(
+        error.response?.data?.detail ||
+        "Failed to delete review",
         "error"
       );
     }
@@ -396,25 +419,52 @@ function MovieDetails() {
             <p className="detail-empty">No reviews yet.</p>
           ) : (
             <div className="review-list">
-              {reviews.map((review) => (
-                <article
-                  key={review.id}
-                  className="review-card"
-                >
-                  <div>
-                    <strong>Rating {review.rating}/5</strong>
-                    <p>{review.review}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      likeReview(review.id)
-                    }
+              {reviews.map((review) => {
+                const isOwnReview =
+                  String(review.user_id) ===
+                  localStorage.getItem("user_id");
+
+                return (
+                  <article
+                    key={review.id}
+                    className="review-card"
                   >
-                    Like
-                  </button>
-                </article>
-              ))}
+                    <div>
+                      <strong>Rating {review.rating}/5</strong>
+                      <p>{review.review}</p>
+                      {review.created_at && (
+                        <small>
+                          {new Date(review.created_at)
+                            .toLocaleDateString()}
+                        </small>
+                      )}
+                    </div>
+
+                    <div className="review-card-actions">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          likeReview(review.id)
+                        }
+                      >
+                        Like
+                      </button>
+
+                      {isOwnReview && (
+                        <button
+                          type="button"
+                          className="delete-review-btn"
+                          onClick={() =>
+                            deleteReview(review.id)
+                          }
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           )}
         </section>

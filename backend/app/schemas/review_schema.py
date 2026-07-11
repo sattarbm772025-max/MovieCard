@@ -5,6 +5,8 @@ class ReviewCreate(BaseModel):
 
     movie_id: str
 
+    movie_title: str = ""
+
     review: str
 
     rating: int = Field(

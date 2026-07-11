@@ -70,6 +70,7 @@ def add_review(
 
     new_review = Review(
         movie_id=review.movie_id,
+        movie_title=review.movie_title,
         review=review.review,
         rating=review.rating,
         user_id=current_user.id
@@ -84,8 +85,11 @@ def add_review(
         "review": {
             "id": new_review.id,
             "movie_id": new_review.movie_id,
+            "movie_title": new_review.movie_title,
             "review": new_review.review,
-            "rating": new_review.rating
+            "rating": new_review.rating,
+            "created_at": new_review.created_at,
+            "user_id": new_review.user_id
         }
     }
 
@@ -198,6 +202,7 @@ def update_review(
 
     review.review = review_data.review
     review.rating = review_data.rating
+    review.movie_title = review_data.movie_title
 
     db.commit()
     db.refresh(review)
@@ -207,8 +212,11 @@ def update_review(
         "review": {
             "id": review.id,
             "movie_id": review.movie_id,
+            "movie_title": review.movie_title,
             "review": review.review,
-            "rating": review.rating
+            "rating": review.rating,
+            "created_at": review.created_at,
+            "user_id": review.user_id
         }
     }
 
