@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
 from app.database.connection import (
     Base,
@@ -41,6 +42,42 @@ from app.routes import (
 )
 
 Base.metadata.create_all(bind=engine)
+
+
+def ensure_sqlite_columns():
+
+    columns = {
+        "collections": {
+            "visibility": "VARCHAR DEFAULT 'private'",
+            "cover_image": "VARCHAR",
+        },
+        "collection_movies": {
+            "year": "VARCHAR",
+            "imdb_rating": "VARCHAR",
+            "runtime": "VARCHAR",
+        },
+    }
+
+    with engine.begin() as connection:
+        for table_name, table_columns in columns.items():
+            existing_columns = {
+                row[1]
+                for row in connection.execute(
+                    text(f"PRAGMA table_info({table_name})")
+                )
+            }
+
+            for column_name, column_type in table_columns.items():
+                if column_name not in existing_columns:
+                    connection.execute(
+                        text(
+                            f"ALTER TABLE {table_name} "
+                            f"ADD COLUMN {column_name} {column_type}"
+                        )
+                    )
+
+
+ensure_sqlite_columns()
 
 app = FastAPI(
     title="Movie Recommendation API"

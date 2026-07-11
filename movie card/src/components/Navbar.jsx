@@ -132,32 +132,44 @@ function Navbar() {
       <div className="nav-links">
 
         <Link to="/">
+          <span className="nav-icon">⌂</span>
           Home
         </Link>
 
         {token && (
           <>
             <Link to="/dashboard">
+              <span className="nav-icon">▦</span>
               Dashboard
             </Link>
 
             <Link to="/favorites">
+              <span className="nav-icon">♡</span>
               Favorites
             </Link>
 
             <Link to="/watchlist">
+              <span className="nav-icon">▤</span>
               Watchlist
             </Link>
 
             <Link to="/watched">
+              <span className="nav-icon">✓</span>
               Watched
             </Link>
 
             <Link to="/collections">
+              <span className="nav-icon">□</span>
               Collections
             </Link>
 
+            <Link to="/collections/public">
+              <span className="nav-icon">◇</span>
+              Public
+            </Link>
+
             <Link to="/compare">
+              <span className="nav-icon">⇄</span>
               Compare
             </Link>
 
@@ -194,11 +206,13 @@ function Navbar() {
             </Link>
 
             <Link to="/profile">
+              <span className="nav-icon">○</span>
               Profile
             </Link>
 
             {isAdmin && (
               <Link to="/admin">
+                <span className="nav-icon">⚙</span>
                 Admin
               </Link>
             )}

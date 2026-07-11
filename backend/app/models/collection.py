@@ -35,6 +35,13 @@ class Collection(Base):
         String
     )
 
+    visibility = Column(
+        String,
+        default="private"
+    )
+
+    cover_image = Column(String)
+
     created_at = Column(
         DateTime,
         default=datetime.utcnow

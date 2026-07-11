@@ -33,6 +33,9 @@
 }
 
 .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #d7d7d7;
   text-decoration: none;
   padding: 9px 12px;
@@ -40,6 +43,18 @@
   font-size: 14px;
   font-weight: 700;
   transition: 0.2s ease;
+}
+
+.nav-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffd60a;
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .nav-links a:hover {

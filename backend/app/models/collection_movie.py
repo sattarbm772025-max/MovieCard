@@ -33,3 +33,9 @@ class CollectionMovie(Base):
     poster = Column(String)
 
     genre = Column(String)
+
+    year = Column(String)
+
+    imdb_rating = Column(String)
+
+    runtime = Column(String)
