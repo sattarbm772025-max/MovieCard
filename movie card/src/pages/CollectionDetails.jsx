@@ -131,7 +131,7 @@ function CollectionDetails() {
               to="/collections"
               className="detail-back"
             >
-              ‹ Back to Collections
+              Back to Collections
             </Link>
             <h1>{collection.name}</h1>
             <p>{collection.description || "No description added."}</p>

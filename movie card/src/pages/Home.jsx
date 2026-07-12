@@ -196,7 +196,10 @@ function Home() {
       <Navbar />
 
       <main className="home-container">
-        <div className="search-section">
+        <div
+          id="search"
+          className="search-section"
+        >
           <div className="search-box smart-search-box">
             <span className="search-icon">S</span>
 

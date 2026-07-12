@@ -1,11 +1,11 @@
 .navbar {
-  width: min(1180px, calc(100% - 40px));
+  width: min(1500px, calc(100% - 48px));
   margin: 24px auto 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 14px 18px;
+  gap: 18px;
+  padding: 16px 22px;
   color: white;
   position: sticky;
   top: 16px;
@@ -17,9 +17,13 @@
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.34);
 }
 
+.mobile-topbar {
+  display: none;
+}
+
 .logo {
   white-space: nowrap;
-  font-size: 24px;
+  font-size: clamp(22px, 2vw, 30px);
   font-weight: 900;
   color: white;
 }
@@ -27,9 +31,10 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 7px;
+  flex-wrap: nowrap;
   justify-content: flex-end;
+  min-width: 0;
 }
 
 .nav-link {
@@ -38,22 +43,24 @@
   gap: 6px;
   color: #d7d7d7;
   text-decoration: none;
-  padding: 9px 12px;
+  padding: 9px 10px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: clamp(12px, 0.88vw, 15px);
   font-weight: 700;
   transition: 0.2s ease;
+  white-space: nowrap;
 }
 
 .nav-icon {
   display: inline-grid;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   color: #ffd60a;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
 }
 
@@ -96,7 +103,7 @@
   border: none;
   background: #ffd60a;
   color: #111111;
-  padding: 9px 14px;
+  padding: 10px 16px;
   border-radius: 999px;
   cursor: pointer;
   font-weight: 800;
@@ -107,6 +114,9 @@
 .theme-btn {
   background: #2b2b2f;
   color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .logout-btn:hover,
@@ -124,24 +134,115 @@ body.light-mode .nav-link {
   color: #111111;
 }
 
+@media (max-width: 1320px) {
+  .navbar {
+    width: min(1180px, calc(100% - 32px));
+    padding: 14px 16px;
+  }
+
+  .nav-link {
+    padding: 8px 8px;
+    font-size: 12px;
+  }
+
+  .nav-icon {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    font-size: 12px;
+  }
+
+  .logout-btn,
+  .theme-btn {
+    padding: 9px 12px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 860px) {
   .navbar {
-    width: min(292px, calc(100% - 34px));
-    margin: 18px 0 26px 18px;
-    align-items: flex-start;
-    border-radius: 30px;
-    flex-direction: column;
-    padding: 26px 22px;
-    background: linear-gradient(180deg, #ff3131, #b92c2c);
-    box-shadow: 18px 28px 80px rgba(0, 0, 0, 0.46);
+    width: min(100% - 24px, 560px);
+    margin: 12px auto 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 28px;
+    background: rgba(16, 16, 18, 0.92);
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.42);
+  }
+
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mobile-profile-btn,
+  .mobile-quick-link {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: #ffd60a;
+    color: #111111;
+    text-decoration: none;
+    font-size: 19px;
+    cursor: pointer;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.2);
+  }
+
+  .mobile-quick-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mobile-quick-links.right {
+    margin-left: auto;
+  }
+
+  .logo {
+    display: none;
   }
 
   .nav-links {
-    width: 100%;
+    position: fixed;
+    top: 76px;
+    left: 14px;
+    width: min(292px, calc(100% - 28px));
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+    z-index: 200;
+    padding: 18px 14px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, #ff3131, #b92c2c);
+    box-shadow: 16px 26px 80px rgba(0, 0, 0, 0.5);
     display: grid;
     grid-template-columns: 1fr;
-    justify-content: flex-start;
+    align-items: stretch;
+    justify-content: stretch;
     gap: 9px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-18px);
+    transition: 0.2s ease;
+  }
+
+  .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .nav-links::before {
+    content: "MovieCard";
+    display: block;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    padding: 2px 4px 8px;
   }
 
   .nav-link {
@@ -165,5 +266,6 @@ body.light-mode .nav-link {
   .logout-btn,
   .theme-btn {
     width: 100%;
+    justify-content: center;
   }
 }

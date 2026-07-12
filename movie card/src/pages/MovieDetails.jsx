@@ -176,8 +176,21 @@ function MovieDetails() {
 
     try {
 
-      await API.post(
+      const response = await API.post(
         `/reviews/${reviewId}/like`
+      );
+
+      setReviews((currentReviews) =>
+        currentReviews.map((review) =>
+          review.id === reviewId
+            ? {
+                ...review,
+                like_count:
+                  response.data.like_count ??
+                  (review.like_count || 0) + 1,
+              }
+            : review
+        )
       );
 
       showToast("Review liked");
@@ -305,7 +318,7 @@ function MovieDetails() {
             to="/"
             className="detail-back"
           >
-            ‹ Back
+            Back
           </Link>
 
           <div className="detail-hero-grid">
@@ -321,7 +334,7 @@ function MovieDetails() {
 
             <div className="details-content">
               <div className="detail-kicker">
-                {movie.Type || "Movie"} • {movie.Year}
+                {movie.Type || "Movie"} | {movie.Year}
               </div>
 
               <h1>{movie.Title}</h1>
@@ -447,7 +460,7 @@ function MovieDetails() {
                           likeReview(review.id)
                         }
                       >
-                        Like
+                        Like ({review.like_count || 0})
                       </button>
 
                       {isOwnReview && (

@@ -90,6 +90,13 @@ def like_review(
 
     db.commit()
 
+    like_count = (
+        db.query(ReviewLike)
+        .filter(ReviewLike.review_id == review_id)
+        .count()
+    )
+
     return {
-        "message": "Review liked"
+        "message": "Review liked",
+        "like_count": like_count
     }

@@ -10,6 +10,7 @@ from sqlalchemy import func
 
 from app.database.connection import SessionLocal
 from app.models.review import Review
+from app.models.review_like import ReviewLike
 from app.models.user import User
 from app.schemas.review_schema import ReviewCreate
 from app.utils.dependencies import get_current_user
@@ -26,6 +27,35 @@ def get_db():
 
     finally:
         db.close()
+
+
+def review_like_count(
+    db: Session,
+    review_id: int
+):
+
+    return (
+        db.query(ReviewLike)
+        .filter(ReviewLike.review_id == review_id)
+        .count()
+    )
+
+
+def serialize_review(
+    review: Review,
+    db: Session
+):
+
+    return {
+        "id": review.id,
+        "movie_id": review.movie_id,
+        "movie_title": review.movie_title,
+        "review": review.review,
+        "rating": review.rating,
+        "created_at": review.created_at,
+        "user_id": review.user_id,
+        "like_count": review_like_count(db, review.id),
+    }
 
 
 @router.post(
@@ -82,15 +112,7 @@ def add_review(
 
     return {
         "message": "Review added successfully",
-        "review": {
-            "id": new_review.id,
-            "movie_id": new_review.movie_id,
-            "movie_title": new_review.movie_title,
-            "review": new_review.review,
-            "rating": new_review.rating,
-            "created_at": new_review.created_at,
-            "user_id": new_review.user_id
-        }
+        "review": serialize_review(new_review, db)
     }
 
 
@@ -153,7 +175,10 @@ def get_reviews(
         .all()
     )
 
-    return reviews
+    return [
+        serialize_review(review, db)
+        for review in reviews
+    ]
 
 
 @router.put("/reviews/{review_id}")
@@ -209,15 +234,7 @@ def update_review(
 
     return {
         "message": "Review updated successfully",
-        "review": {
-            "id": review.id,
-            "movie_id": review.movie_id,
-            "movie_title": review.movie_title,
-            "review": review.review,
-            "rating": review.rating,
-            "created_at": review.created_at,
-            "user_id": review.user_id
-        }
+        "review": serialize_review(review, db)
     }
 
 
@@ -249,6 +266,12 @@ def delete_review(
             status_code=403,
             detail="You can only delete your own review"
         )
+
+    (
+        db.query(ReviewLike)
+        .filter(ReviewLike.review_id == review_id)
+        .delete()
+    )
 
     db.delete(review)
     db.commit()

@@ -32,6 +32,9 @@ function Navbar() {
   const [unreadCount, setUnreadCount] =
     useState(0);
 
+  const [menuOpen, setMenuOpen] =
+    useState(false);
+
   useEffect(() => {
 
     const savedTheme =
@@ -97,6 +100,7 @@ function Navbar() {
 
   const handleLogout = () => {
 
+    setMenuOpen(false);
     logout();
     navigate("/login");
   };
@@ -104,58 +108,163 @@ function Navbar() {
   const navClass = ({ isActive }) =>
     isActive ? "nav-link active" : "nav-link";
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <nav className="navbar">
+      <div className="mobile-topbar">
+        <button
+          type="button"
+          className="mobile-profile-btn"
+          onClick={() =>
+            setMenuOpen((current) => !current)
+          }
+          aria-label="Open menu"
+        >
+          👤
+        </button>
+
+        <div className="mobile-quick-links">
+          <NavLink
+            to="/"
+            end
+            className="mobile-quick-link"
+            aria-label="Home"
+            onClick={closeMenu}
+          >
+            🏠
+          </NavLink>
+          <a
+            href="#search"
+            className="mobile-quick-link"
+            aria-label="Search"
+            onClick={closeMenu}
+          >
+            🔍
+          </a>
+        </div>
+
+        <div className="mobile-quick-links right">
+          {token && (
+            <>
+              <NavLink
+                to="/favorites"
+                className="mobile-quick-link"
+                aria-label="Favorites"
+                onClick={closeMenu}
+              >
+                ❤️
+              </NavLink>
+              <NavLink
+                to="/watchlist"
+                className="mobile-quick-link"
+                aria-label="Watchlist"
+                onClick={closeMenu}
+              >
+                📋
+              </NavLink>
+            </>
+          )}
+          <button
+            type="button"
+            className="mobile-quick-link"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
+      </div>
+
       <div className="logo">
         MovieCard
       </div>
 
-      <div className="nav-links">
-        <NavLink to="/" className={navClass}>
-          <span className="nav-icon">H</span>
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <NavLink
+          to="/"
+          end
+          className={navClass}
+          onClick={closeMenu}
+        >
+          <span className="nav-icon">🏠</span>
           Home
         </NavLink>
 
         {token && (
           <>
-            <NavLink to="/dashboard" className={navClass}>
-              <span className="nav-icon">D</span>
+            <NavLink
+              to="/dashboard"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">📊</span>
               Dashboard
             </NavLink>
 
-            <NavLink to="/favorites" className={navClass}>
-              <span className="nav-icon">F</span>
+            <NavLink
+              to="/favorites"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">❤️</span>
               Favorites
             </NavLink>
 
-            <NavLink to="/watchlist" className={navClass}>
-              <span className="nav-icon">W</span>
+            <NavLink
+              to="/watchlist"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">📋</span>
               Watchlist
             </NavLink>
 
-            <NavLink to="/watched" className={navClass}>
-              <span className="nav-icon">OK</span>
+            <NavLink
+              to="/watched"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">✅</span>
               Watched
             </NavLink>
 
-            <NavLink to="/collections" className={navClass}>
-              <span className="nav-icon">C</span>
+            <NavLink
+              to="/collections"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">🎞️</span>
               Collections
             </NavLink>
 
-            <NavLink to="/collections/public" className={navClass}>
-              <span className="nav-icon">P</span>
+            <NavLink
+              to="/collections/public"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">🌐</span>
               Public
             </NavLink>
 
-            <NavLink to="/compare" className={navClass}>
-              <span className="nav-icon">VS</span>
+            <NavLink
+              to="/compare"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">⚖️</span>
               Compare
             </NavLink>
 
-            <NavLink to="/notifications" className={navClass}>
+            <NavLink
+              to="/notifications"
+              className={navClass}
+              onClick={closeMenu}
+            >
               <span className="alert-link">
-                <span className="nav-icon">N</span>
+                <span className="nav-icon">🔔</span>
                 Alerts
                 {unreadCount > 0 && (
                   <span className="alert-badge">
@@ -165,14 +274,22 @@ function Navbar() {
               </span>
             </NavLink>
 
-            <NavLink to="/profile" className={navClass}>
-              <span className="nav-icon">U</span>
+            <NavLink
+              to="/profile"
+              className={navClass}
+              onClick={closeMenu}
+            >
+              <span className="nav-icon">👤</span>
               Profile
             </NavLink>
 
             {isAdmin && (
-              <NavLink to="/admin" className={navClass}>
-                <span className="nav-icon">A</span>
+              <NavLink
+                to="/admin"
+                className={navClass}
+                onClick={closeMenu}
+              >
+                <span className="nav-icon">⚙️</span>
                 Admin
               </NavLink>
             )}
@@ -181,11 +298,19 @@ function Navbar() {
 
         {!token ? (
           <>
-            <NavLink to="/login" className={navClass}>
+            <NavLink
+              to="/login"
+              className={navClass}
+              onClick={closeMenu}
+            >
               Login
             </NavLink>
 
-            <NavLink to="/register" className={navClass}>
+            <NavLink
+              to="/register"
+              className={navClass}
+              onClick={closeMenu}
+            >
               Register
             </NavLink>
           </>
@@ -202,6 +327,7 @@ function Navbar() {
           className="theme-btn"
           onClick={toggleTheme}
         >
+          <span>{darkMode ? "☀️" : "🌙"}</span>
           {darkMode ? "Light" : "Dark"}
         </button>
       </div>
