@@ -201,7 +201,9 @@ function Home() {
           className="search-section"
         >
           <div className="search-box smart-search-box">
-            <span className="search-icon">S</span>
+            <span className="search-icon">
+              {"\uD83D\uDD0E"}
+            </span>
 
             <input
               type="text"
@@ -219,7 +221,9 @@ function Home() {
           </div>
 
           <div className="genre-box smart-genre-box">
-            <span className="search-icon">G</span>
+            <span className="search-icon">
+              {"\uD83C\uDFAD"}
+            </span>
 
             <select
               value={genre}

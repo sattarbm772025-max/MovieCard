@@ -196,6 +196,53 @@ body.light-mode .movie-card {
 @media (max-width: 768px) {
   .movie-card,
   .movie-image {
-    min-height: 320px;
+    min-height: 235px;
+  }
+
+  .movie-card {
+    border-radius: 15px;
+  }
+
+  .movie-content {
+    padding: 60px 10px 10px;
+  }
+
+  .movie-title {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .movie-rating,
+  .movie-chip {
+    min-height: 24px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .movie-story {
+    font-size: 11px;
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
+  }
+
+  .movie-buttons {
+    grid-template-columns: 1fr 1fr 34px;
+    gap: 6px;
+  }
+
+  .favorite-btn,
+  .watch-btn,
+  .compare-btn,
+  .watched-btn {
+    min-height: 32px;
+    border-radius: 8px;
+    font-size: 10px;
+  }
+
+  .watched-badge {
+    top: 8px;
+    right: 8px;
+    padding: 5px 8px;
+    font-size: 10px;
   }
 }

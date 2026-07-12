@@ -16,6 +16,23 @@ import {
 import API from "../api/axios";
 import "./Navbar.css";
 
+const icons = {
+  profile: "\uD83D\uDC64",
+  home: "\uD83C\uDFE0",
+  search: "\uD83D\uDD0E",
+  favorite: "\u2764\uFE0F",
+  watchlist: "\uD83D\uDCCB",
+  dashboard: "\uD83D\uDCCA",
+  watched: "\u2705",
+  collections: "\uD83C\uDF9E\uFE0F",
+  public: "\uD83C\uDF10",
+  compare: "\u2696\uFE0F",
+  alerts: "\uD83D\uDD14",
+  admin: "\u2699\uFE0F",
+  light: "\u2600\uFE0F",
+  dark: "\uD83C\uDF19",
+};
+
 function Navbar() {
 
   const navigate = useNavigate();
@@ -105,28 +122,42 @@ function Navbar() {
     navigate("/login");
   };
 
-  const navClass = ({ isActive }) =>
-    isActive ? "nav-link active" : "nav-link";
-
   const closeMenu = () => {
     setMenuOpen(false);
   };
 
+  const navClass = ({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link";
+
+  const themeIcon =
+    darkMode ? icons.light : icons.dark;
+
   return (
     <nav className="navbar">
       <div className="mobile-topbar">
-        <button
-          type="button"
-          className="mobile-profile-btn"
-          onClick={() =>
-            setMenuOpen((current) => !current)
-          }
-          aria-label="Open menu"
-        >
-          👤
-        </button>
+        <div className="mobile-left-actions">
+          <button
+            type="button"
+            className="mobile-profile-btn"
+            onClick={() =>
+              setMenuOpen((current) => !current)
+            }
+            aria-label="Open menu"
+          >
+            {icons.profile}
+          </button>
 
-        <div className="mobile-quick-links">
+          <a
+            href="#search"
+            className="mobile-quick-link"
+            aria-label="Search"
+            onClick={closeMenu}
+          >
+            {icons.search}
+          </a>
+        </div>
+
+        <div className="mobile-quick-links right">
           <NavLink
             to="/"
             end
@@ -134,19 +165,9 @@ function Navbar() {
             aria-label="Home"
             onClick={closeMenu}
           >
-            🏠
+            {icons.home}
           </NavLink>
-          <a
-            href="#search"
-            className="mobile-quick-link"
-            aria-label="Search"
-            onClick={closeMenu}
-          >
-            🔍
-          </a>
-        </div>
 
-        <div className="mobile-quick-links right">
           {token && (
             <>
               <NavLink
@@ -155,25 +176,27 @@ function Navbar() {
                 aria-label="Favorites"
                 onClick={closeMenu}
               >
-                ❤️
+                {icons.favorite}
               </NavLink>
+
               <NavLink
                 to="/watchlist"
                 className="mobile-quick-link"
                 aria-label="Watchlist"
                 onClick={closeMenu}
               >
-                📋
+                {icons.watchlist}
               </NavLink>
             </>
           )}
+
           <button
             type="button"
             className="mobile-quick-link"
             onClick={toggleTheme}
             aria-label="Toggle theme"
           >
-            {darkMode ? "☀️" : "🌙"}
+            {themeIcon}
           </button>
         </div>
       </div>
@@ -189,7 +212,7 @@ function Navbar() {
           className={navClass}
           onClick={closeMenu}
         >
-          <span className="nav-icon">🏠</span>
+          <span className="nav-icon">{icons.home}</span>
           Home
         </NavLink>
 
@@ -200,7 +223,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">📊</span>
+              <span className="nav-icon">{icons.dashboard}</span>
               Dashboard
             </NavLink>
 
@@ -209,7 +232,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">❤️</span>
+              <span className="nav-icon">{icons.favorite}</span>
               Favorites
             </NavLink>
 
@@ -218,7 +241,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">📋</span>
+              <span className="nav-icon">{icons.watchlist}</span>
               Watchlist
             </NavLink>
 
@@ -227,7 +250,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">✅</span>
+              <span className="nav-icon">{icons.watched}</span>
               Watched
             </NavLink>
 
@@ -236,7 +259,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">🎞️</span>
+              <span className="nav-icon">{icons.collections}</span>
               Collections
             </NavLink>
 
@@ -245,7 +268,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">🌐</span>
+              <span className="nav-icon">{icons.public}</span>
               Public
             </NavLink>
 
@@ -254,7 +277,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">⚖️</span>
+              <span className="nav-icon">{icons.compare}</span>
               Compare
             </NavLink>
 
@@ -264,7 +287,7 @@ function Navbar() {
               onClick={closeMenu}
             >
               <span className="alert-link">
-                <span className="nav-icon">🔔</span>
+                <span className="nav-icon">{icons.alerts}</span>
                 Alerts
                 {unreadCount > 0 && (
                   <span className="alert-badge">
@@ -279,7 +302,7 @@ function Navbar() {
               className={navClass}
               onClick={closeMenu}
             >
-              <span className="nav-icon">👤</span>
+              <span className="nav-icon">{icons.profile}</span>
               Profile
             </NavLink>
 
@@ -289,7 +312,7 @@ function Navbar() {
                 className={navClass}
                 onClick={closeMenu}
               >
-                <span className="nav-icon">⚙️</span>
+                <span className="nav-icon">{icons.admin}</span>
                 Admin
               </NavLink>
             )}
@@ -326,9 +349,10 @@ function Navbar() {
         <button
           className="theme-btn"
           onClick={toggleTheme}
+          aria-label="Toggle theme"
+          title={darkMode ? "Light mode" : "Dark mode"}
         >
-          <span>{darkMode ? "☀️" : "🌙"}</span>
-          {darkMode ? "Light" : "Dark"}
+          {themeIcon}
         </button>
       </div>
     </nav>

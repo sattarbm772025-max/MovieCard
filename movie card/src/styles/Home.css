@@ -167,7 +167,7 @@
   border: 1px solid rgba(255, 214, 10, 0.16);
   border-radius: 28px;
   background:
-    radial-gradient(circle at 10% 0%, rgba(255, 214, 10, 0.1), transparent 36%),
+    linear-gradient(135deg, rgba(255, 214, 10, 0.12), rgba(229, 9, 20, 0.08)),
     rgba(255, 255, 255, 0.035);
   padding: 22px;
 }
@@ -259,8 +259,14 @@ body.light-mode .genre-box select {
   }
 
   .search-section {
+    display: none;
     margin-top: 22px;
     gap: 16px;
+  }
+
+  .search-section:target {
+    display: flex;
+    animation: revealSearch 0.2s ease;
   }
 
   .search-box,
@@ -286,8 +292,38 @@ body.light-mode .genre-box select {
     line-height: 1.05;
   }
 
+  .movie-list {
+    grid-auto-columns: minmax(145px, 165px);
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+
   .recommended-row {
     margin-inline: -2px;
-    padding: 18px 14px;
+    padding: 16px 12px;
+    border-radius: 22px;
+    background:
+      linear-gradient(135deg, rgba(255, 214, 10, 0.16), rgba(56, 189, 248, 0.08)),
+      rgba(255, 255, 255, 0.04);
+  }
+
+  .recommended-row .movie-list {
+    grid-auto-columns: minmax(132px, 150px);
+  }
+
+  .recommended-row h2 {
+    font-size: 28px;
+  }
+}
+
+@keyframes revealSearch {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
