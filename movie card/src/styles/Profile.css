@@ -1,0 +1,227 @@
+.profile-page {
+  color: #ffffff;
+}
+
+.profile-inner {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 64px;
+}
+
+.profile-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  padding: 24px;
+  margin-bottom: 22px;
+}
+
+.profile-avatar {
+  width: 108px;
+  height: 108px;
+  display: grid;
+  place-items: center;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #ffd60a, #22c55e);
+  color: #111111;
+  font-size: 36px;
+  font-weight: 950;
+}
+
+.profile-identity h1 {
+  margin: 0 0 8px;
+  font-size: 42px;
+  line-height: 1.05;
+}
+
+.profile-identity p,
+.profile-panel-header p,
+.profile-account p,
+.profile-empty {
+  margin: 0;
+  color: #a7a7a7;
+}
+
+.profile-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.profile-edit-grid,
+.profile-form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.profile-edit-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.profile-edit-grid input,
+.profile-form-grid input,
+.genre-form select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: #121214;
+  color: #ffffff;
+  padding: 0 14px;
+  outline: none;
+}
+
+.profile-edit-grid input:focus,
+.profile-form-grid input:focus,
+.genre-form select:focus {
+  border-color: #ffd60a;
+  box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.12);
+}
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.profile-stat-card {
+  padding: 20px;
+}
+
+.profile-stat-card span {
+  display: block;
+  margin-bottom: 10px;
+  color: #a7a7a7;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.profile-stat-card strong {
+  color: #ffd60a;
+  font-size: 34px;
+}
+
+.profile-content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.75fr);
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.profile-panel,
+.profile-account {
+  padding: 22px;
+}
+
+.profile-panel-header {
+  margin-bottom: 18px;
+}
+
+.profile-panel-header h2,
+.profile-account h2 {
+  margin: 0 0 8px;
+}
+
+.genre-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.genre-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.genre-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 214, 10, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 214, 10, 0.1);
+  color: #ffd60a;
+  padding: 8px 10px 8px 14px;
+  font-weight: 900;
+}
+
+.genre-chip button {
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: inherit;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.profile-account {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+body.light-mode .profile-page {
+  color: #111111;
+}
+
+body.light-mode .profile-identity p,
+body.light-mode .profile-panel-header p,
+body.light-mode .profile-account p,
+body.light-mode .profile-empty,
+body.light-mode .profile-stat-card span {
+  color: #6b7280;
+}
+
+body.light-mode .profile-edit-grid input,
+body.light-mode .profile-form-grid input,
+body.light-mode .genre-form select {
+  background: #ffffff;
+  color: #111111;
+  border-color: #d1d5db;
+}
+
+@media (max-width: 900px) {
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-inner {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .profile-hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .profile-header-actions {
+    justify-content: center;
+  }
+
+  .profile-edit-grid,
+  .genre-form,
+  .profile-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-account {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

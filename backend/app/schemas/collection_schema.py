@@ -7,6 +7,17 @@ class CollectionCreate(BaseModel):
 
     description: str = ""
 
+    visibility: str = "private"
+
+
+class CollectionUpdate(BaseModel):
+
+    name: str
+
+    description: str = ""
+
+    visibility: str = "private"
+
 
 class CollectionMovieCreate(BaseModel):
 
@@ -17,3 +28,9 @@ class CollectionMovieCreate(BaseModel):
     poster: str = ""
 
     genre: str = ""
+
+    year: str = ""
+
+    imdb_rating: str = ""
+
+    runtime: str = ""

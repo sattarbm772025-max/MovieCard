@@ -13,6 +13,7 @@ import "./styles/Global.css";
 import AuthProvider from "./context/AuthContext";
 
 import ThemeProvider from "./context/ThemeContext";
+import { ToastProvider } from "./context/ToastContext";
 
 ReactDOM.createRoot(
   document.getElementById("root")
@@ -20,9 +21,11 @@ ReactDOM.createRoot(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </ToastProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -8,13 +8,13 @@ import {
 } from "react-router-dom";
 
 import toast from "react-hot-toast";
+
 import API from "../api/axios";
 import "../styles/Auth.css";
 
 function Register() {
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
   const [username, setUsername] =
     useState("");
@@ -39,10 +39,8 @@ function Register() {
           password,
         }
       );
-      toast.success(
-        "Registration Successful"
-      );
 
+      toast.success("Registration Successful");
       navigate("/login");
 
     } catch (error) {
@@ -56,60 +54,83 @@ function Register() {
 
   return (
     <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-left">
+          <div className="auth-overlay">
+            <div className="auth-logo">
+              <span className="auth-logo-mark">
+                M
+              </span>
+              MovieCard
+            </div>
 
-      <form
-        className="auth-form"
-        onSubmit={handleRegister}
-      >
+            <div />
+          </div>
+        </div>
 
-        <h1>Register</h1>
+        <div className="auth-right">
+          <form
+            className="auth-form"
+            onSubmit={handleRegister}
+          >
+            <h1>Create Account</h1>
 
-        <input
-          type="text"
-          placeholder="Enter Username"
-          value={username}
-          onChange={(e) =>
-            setUsername(e.target.value)
-          }
-          required
-        />
+            <p className="auth-subtitle">
+              Register to start watching smarter
+            </p>
 
-        <input
-          type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) =>
-            setEmail(e.target.value)
-          }
-          required
-        />
+            <div className="auth-input">
+              <span>U</span>
+              <input
+                type="text"
+                placeholder="Username"
+                value={username}
+                onChange={(e) =>
+                  setUsername(e.target.value)
+                }
+                required
+              />
+            </div>
 
-        <input
-          type="password"
-          placeholder="Enter Password"
-          value={password}
-          onChange={(e) =>
-            setPassword(e.target.value)
-          }
-          required
-        />
+            <div className="auth-input">
+              <span>@</span>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
+                required
+              />
+            </div>
 
-        <button type="submit">
-          Register
-        </button>
+            <div className="auth-input">
+              <span>*</span>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
+                required
+              />
+            </div>
 
-        <p>
+            <button type="submit">
+              Register
+            </button>
 
-          Already have account?
-
-          <Link to="/login">
-            Login
-          </Link>
-
-        </p>
-
-      </form>
-
+            <p className="auth-note">
+              Already have account?
+              <Link to="/login">
+                Login
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

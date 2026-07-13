@@ -12,6 +12,12 @@ import MovieDetails from "./pages/MovieDetails";
 import Profile from "./pages/profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import Collections from "./pages/Collections";
+import CollectionDetails from "./pages/CollectionDetails";
+import PublicCollections from "./pages/PublicCollections";
+import Notifications from "./pages/Notifications";
+import CompareMovies from "./pages/CompareMovies";
+import WatchedHistory from "./pages/WatchedHistory";
+import Dashboard from "./pages/Dashboard";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -97,6 +103,62 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/collections/public"
+          element={
+            <ProtectedRoute>
+              <PublicCollections />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/collections/:id"
+          element={
+            <ProtectedRoute>
+              <CollectionDetails />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/compare"
+          element={
+            <ProtectedRoute>
+              <CompareMovies />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/watched"
+          element={
+            <ProtectedRoute>
+              <WatchedHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
+            </ProtectedRoute>
+          }
+        />
+
+
 
       </Routes>
     </>
