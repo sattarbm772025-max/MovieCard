@@ -1,7 +1,6 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
@@ -36,7 +35,9 @@ function Collections() {
       setLoading(true);
 
       const response =
-        await API.get("/collections");
+        await API.get(
+          `/collections?sort=${sortOrder}`
+        );
 
       setCollections(response.data);
 
@@ -52,28 +53,13 @@ function Collections() {
 
       setLoading(false);
     }
-  }, [showToast]);
+  }, [showToast, sortOrder]);
 
   useEffect(() => {
 
     loadCollections();
 
   }, [loadCollections]);
-
-  const sortedCollections = useMemo(() => {
-
-    return [...collections].sort((first, second) => {
-      const firstDate =
-        new Date(first.created_at).getTime();
-      const secondDate =
-        new Date(second.created_at).getTime();
-
-      return sortOrder === "newest"
-        ? secondDate - firstDate
-        : firstDate - secondDate;
-    });
-
-  }, [collections, sortOrder]);
 
   const openCreateModal = () => {
     setEditingCollection(null);
@@ -182,14 +168,20 @@ function Collections() {
           <div className="collections-empty glass-panel">
             Loading collections...
           </div>
-        ) : sortedCollections.length === 0 ? (
+        ) : collections.length === 0 ? (
           <div className="collections-empty glass-panel">
             <h2>No collections yet</h2>
             <p>Create your first collection to organize movies.</p>
           </div>
         ) : (
-          <section className="collections-grid">
-            {sortedCollections.map((collection) => (
+          <section
+            className={
+              collections.length === 1
+                ? "collections-grid single-card"
+                : "collections-grid"
+            }
+          >
+            {collections.map((collection) => (
               <CollectionCard
                 key={collection.id}
                 collection={collection}

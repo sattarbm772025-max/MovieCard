@@ -5,6 +5,7 @@ from fastapi import (
 )
 
 from sqlalchemy import func, or_
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.database.connection import SessionLocal
@@ -161,16 +162,22 @@ def create_collection(
 
 @router.get("/collections")
 def get_collections(
+    sort: str = "newest",
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
 
-    collections = (
+    query = (
         db.query(Collection)
         .filter(Collection.user_id == current_user.id)
-        .order_by(Collection.created_at.desc())
-        .all()
     )
+
+    if sort == "oldest":
+        query = query.order_by(Collection.created_at.asc())
+    else:
+        query = query.order_by(Collection.created_at.desc())
+
+    collections = query.all()
 
     return [
         serialize_collection(
@@ -429,7 +436,15 @@ def add_movie_to_collection(
         collection.cover_image = movie.poster
 
     db.add(new_movie)
-    db.commit()
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Movie already exists in this collection"
+        )
 
     return {
         "message": "Movie added to collection"

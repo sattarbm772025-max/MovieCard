@@ -2,6 +2,7 @@ import {
   Cell,
   Pie,
   PieChart,
+  Legend,
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
@@ -31,7 +32,7 @@ function WatchRatioChart({
     data.some((item) => item.value > 0);
 
   return (
-    <section className="dashboard-chart-card glass-panel">
+    <section className="dashboard-chart-card watch-ratio-card glass-panel">
       <h2>Watchlist vs Watched</h2>
 
       {!hasData ? (
@@ -39,16 +40,14 @@ function WatchRatioChart({
           Add watchlist or watched movies to see this ratio.
         </p>
       ) : (
-        <ResponsiveContainer
-          width="100%"
-          height={280}
-        >
+        <div className="watch-ratio-chart">
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
               dataKey="value"
               nameKey="name"
-              outerRadius={95}
+              outerRadius="72%"
               label
             >
               {data.map((entry, index) => (
@@ -59,8 +58,13 @@ function WatchRatioChart({
               ))}
             </Pie>
             <Tooltip />
+            <Legend
+              verticalAlign="bottom"
+              height={32}
+            />
           </PieChart>
         </ResponsiveContainer>
+        </div>
       )}
     </section>
   );

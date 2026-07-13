@@ -2,7 +2,8 @@ from sqlalchemy import (
     Column,
     Integer,
     String,
-    ForeignKey
+    ForeignKey,
+    UniqueConstraint
 )
 
 from app.database.connection import Base
@@ -11,6 +12,13 @@ from app.database.connection import Base
 class CollectionMovie(Base):
 
     __tablename__ = "collection_movies"
+    __table_args__ = (
+        UniqueConstraint(
+            "collection_id",
+            "movie_id",
+            name="uq_collection_movie"
+        ),
+    )
 
     id = Column(
         Integer,

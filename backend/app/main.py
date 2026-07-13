@@ -80,6 +80,28 @@ def ensure_sqlite_columns():
                         )
                     )
 
+        connection.execute(
+            text(
+                """
+                DELETE FROM collection_movies
+                WHERE id NOT IN (
+                    SELECT MIN(id)
+                    FROM collection_movies
+                    GROUP BY collection_id, movie_id
+                )
+                """
+            )
+        )
+        connection.execute(
+            text(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS
+                uq_collection_movie
+                ON collection_movies (collection_id, movie_id)
+                """
+            )
+        )
+
 
 ensure_sqlite_columns()
 
